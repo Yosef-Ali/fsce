@@ -8,7 +8,7 @@ const MessageSection: React.FC = () => {
         <div
           className="w-64 h-64 rounded-full mx-auto bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url(https://images.unsplash.com/photo-1422568374078-27d3842ba676?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=340&q=800)`,
+            backgroundImage: `url("/yared.jpeg")`,
           }}
         />
         <h2 className="scroll-m-20 text-xl font-semibold tracking-tight mt-6">Yared Degefu</h2>
