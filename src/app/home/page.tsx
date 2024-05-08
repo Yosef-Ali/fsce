@@ -20,7 +20,7 @@ const featuredPosts = [
   {
     title: 'FSCE Reunites Over 1,300 Children with Families',
     slug: 'fsce-reunites-over-1300-children',
-    image: '/images/child-reunion1.jpeg',
+    image: '/images/Child-reunion.jpeg',
     category: 'News',
     excerpt: 'FSCE has reunited or reintegrated 1,305 children in difficult situations with their families or communities in 2023, ensuring they lead dignified and protected lives.'
   },
