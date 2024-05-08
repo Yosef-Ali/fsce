@@ -1,7 +1,7 @@
 "use client";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import LandingPage from "./landingpage/page";
+import LandingPage from "./home/page";
 import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
 import { SignInButton, SignOutButton, auth } from "@clerk/nextjs";
 

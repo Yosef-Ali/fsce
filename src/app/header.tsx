@@ -20,7 +20,7 @@ const ActiveLink: React.FC<LinkProps> = ({ href, children }) => {
 
   return (
     <Link href={href} legacyBehavior>
-      <a>
+      <a className="text-nowrap">
         {children}
       </a>
     </Link>
@@ -35,8 +35,9 @@ export const Header: React.FC = () => {
 
   const navigationItems = [
     { href: "/", label: "Home" },
-    { href: "/categories", label: "Categories" },
     { href: "/about", label: "About" },
+    { href: "/programs", label: "Programs" },
+    { href: "/news-and-events", label: "News & Events" },
     { href: "/contact", label: "Contact" },
   ];
 

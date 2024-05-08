@@ -3,10 +3,10 @@ import React, { FC } from 'react';
 
 const Categories: FC = () => {
   const categories = [
-    { name: 'Travel Tips', postCount: 2 },
-    { name: 'Shark Life', postCount: 10 },
-    { name: 'Inspiration', postCount: 7 },
-    { name: 'Travel Gear', postCount: 4 }
+    { name: 'Programs', postCount: 2 },
+    { name: 'Events', postCount: 10 },
+    { name: 'News', postCount: 7 },
+    { name: 'Success Stores', postCount: 4 }
   ];
 
   return (
