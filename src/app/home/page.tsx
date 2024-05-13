@@ -1,11 +1,8 @@
 'use client'
-import { siteConfig } from "@/config/site"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
+
 import FeaturedPosts from "./FeaturedPosts"
 import Sidebar from "@/components/Sidebar"
-import FeaturedSection from "./FeaturedPosts"
+
 import CarouselSection from "@/components/carousel"
 import Partners from "@/components/partners"
 
