@@ -17,7 +17,7 @@ const data = [
     apo: "Harari Site"
   },
   {
-    id: "ET-HA",
+    id: "ET-DD",
     title: "Dire Dawa",
     apo: "Dire Dawa, APO "
   },
@@ -76,8 +76,8 @@ const MapComponent: React.FC = () => {
       <section className="w-full">
         <div className="container mx-auto grid  gap-4 px-4 py-8 text-center md:px-6 lg:gap-10">
           <div className="space-y-3 ">
-            <h2 className="text-xl font-bold tracking-tighter sm:text-4xl md:text-5xl ">Graphic Intervention Arias</h2>
-            <p className="text-lg">{2023}</p>
+            <h2 className="text-xl font-bold tracking-tighter sm:text-3xl md:text-5xl ">Graphic Intervention Arias</h2>
+            <h4 className="text-xl font-bold tracking-tighter sm:text-1xl md:text-2xl">2023</h4>
             <div className="flex flex-col item-center justify-center">
               <svg className="default-svg w-full h-full py-4 z-0" preserveAspectRatio="xMidYMid meet" viewBox="0 0 800 600">
                 {memoizedRegions.map((region) => (
@@ -89,9 +89,10 @@ const MapComponent: React.FC = () => {
                   />
                 ))}
               </svg>
-              <div className="relative">
+              <div className="w-full">
                 <motion.div>
-                  {hoveredRegion && <Captions data={data} region={hoveredRegion} />}
+                  {/* Always render Captions, regardless of hoveredRegion state */}
+                  <Captions data={data} region={hoveredRegion} />
                 </motion.div>
               </div>
             </div>
