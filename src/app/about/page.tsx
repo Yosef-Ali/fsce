@@ -3,11 +3,7 @@
 import Sidebar from "@/components/Sidebar";
 //import FeaturedSection from "./FeaturedSection";
 import CarouselSection from "@/components/carousel";
-import styles from './about.module.css';
-import EthiopianMap from "@/components/ethiopian-map.svg";
-import Image from "next/image";
 import MapComponent from "@/components/ethiopian-map";
-import { TooltipOnMap } from "@/components/tool-tip-on-map";
 
 
 export default function AboutPage() {
@@ -98,7 +94,6 @@ export default function AboutPage() {
             </div>
             <div className="mb-8">
               <MapComponent />
-              {/* <TooltipOnMap /> */}
             </div>
           </div>
           <div className="w-full overflow-hidden md:w-2/6 lg:w-2/6 xl:w-2/6">

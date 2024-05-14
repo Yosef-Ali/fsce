@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { regions, Region } from "./regions";
-import RegionPath from "./region-path";
-import "./RegionPath.css";
+import { regions, Region } from "./Map/regions";
+import RegionPath from "./Map/region-path";
 import Captions from "./caption";
 
 interface TooltipProps {
@@ -91,7 +90,6 @@ const MapComponent: React.FC = () => {
               </svg>
               <div className="w-full">
                 <motion.div>
-                  {/* Always render Captions, regardless of hoveredRegion state */}
                   <Captions data={data} region={hoveredRegion} />
                 </motion.div>
               </div>

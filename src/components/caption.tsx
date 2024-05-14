@@ -1,4 +1,4 @@
-import { Region } from "./regions";
+import { Region } from "./Map/regions";
 
 interface CaptionsProps {
   data: { id: string; title: string; apo: string }[];
