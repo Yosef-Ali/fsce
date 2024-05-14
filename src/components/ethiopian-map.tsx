@@ -74,7 +74,7 @@ const MapComponent: React.FC = () => {
   return (
     <>
       <section className="w-full">
-        <div className="container mx-auto grid  gap-4 px-4 py-8 text-center md:px-6 lg:gap-10">
+        <div className="container mx-auto grid  gap-4 px-4 py-8 text-center md:px-6 lg:gap-10 ">
           <div className="space-y-3 ">
             <h2 className="text-xl font-bold tracking-tighter sm:text-3xl md:text-5xl ">Graphic Intervention Arias</h2>
             <h4 className="text-xl font-bold tracking-tighter sm:text-1xl md:text-2xl">2023</h4>

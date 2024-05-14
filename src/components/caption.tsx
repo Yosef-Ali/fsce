@@ -6,7 +6,6 @@ interface CaptionsProps {
 }
 
 const Captions: React.FC<CaptionsProps> = ({ data, region }) => {
-  console.log("region:", region);
 
   // When region is null, show the message to hover over a region
   if (!region) {
