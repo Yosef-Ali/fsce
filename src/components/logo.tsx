@@ -1,9 +1,5 @@
 import React, { forwardRef } from 'react';
 
-
-
-
-
 interface LogoProps {
   white?: boolean;
   size?: number;

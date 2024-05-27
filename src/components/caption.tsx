@@ -1,7 +1,9 @@
 import { Region } from "./Map/regions";
+import Logo from "./logo";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 interface CaptionsProps {
-  data: { id: string; title: string; apo: string }[];
+  data: { id: string; title: string; apo: string; dis: string; }[];
   region: Region | null;
 }
 
@@ -21,11 +23,22 @@ const Captions: React.FC<CaptionsProps> = ({ data, region }) => {
 
   // When there's data and apo is not empty, show the title and apo
   return (
-    <div className="flex">
-      <h3 className="font-bold mr-2">{hoveredRegionData.title}</h3>
-      <span>{hoveredRegionData.apo}</span>
+    <div className="flex items-start gap-4">
+      <Avatar className="hidden h-10 w-10 sm:flex rounded-full bg-muted p-1">
+        <AvatarImage src="/logo.svg" alt="Avatar" />
+        <AvatarFallback>FS</AvatarFallback>
+      </Avatar>
+      <div className="flex flex-col gap-1">
+        <p className="text-lg font-medium leading-none">
+          {hoveredRegionData.title}
+        </p>
+        <p>{hoveredRegionData.apo}</p>
+        <p className="text-sm text-muted-foreground">
+          {hoveredRegionData.dis}
+        </p>
+      </div>
     </div>
-  );
+  )
 };
 
 export default Captions;

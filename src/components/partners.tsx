@@ -18,35 +18,35 @@ export default function Partners() {
               <CarouselItem>
                 <div className="flex items-center justify-center flex-wrap md:flex-nowrap gap-6 p-6 ">
                   <img
-                    alt=""
+                    alt="The World Bank logo"
                     className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
                     height={70}
                     src="/images/The_World_Bank_logo_PNG2.png"
                     width={140}
                   />
                   <img
-                    alt=""
+                    alt="Unicef logo"
                     className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
                     height={70}
                     src="/images/Unicef_logo_PNG5.png"
                     width={140}
                   />
                   <img
-                    alt=""
+                    alt="usaid"
                     className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
                     height={70}
                     src="/images/usaid.png"
                     width={140}
                   />
                   <img
-                    alt=""
+                    alt="Save_The_Children_logo"
                     className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
                     height={70}
                     src="/images/Save_The_Children_logo_PNG1.png"
                     width={140}
                   />
                   <img
-                    alt=""
+                    alt="oak_correct"
                     className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
                     height={70}
                     src="/images/oak_correct.png"
@@ -59,43 +59,108 @@ export default function Partners() {
 
                 <div className="flex items-center justify-center flex-wrap md:flex-nowrap gap-6 p-6 ">
                   <img
-                    alt=""
+                    alt="DC_logo"
+                    className=" object-contain opacity-50 transition-opacity hover:opacity-100"
+                    height={70}
+                    src="/images/DC_logo_RGB_groot.jpg"
+                    width={140}
+                  />
+                  <img
+                    alt="ECPAT_logo"
                     className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
                     height={70}
-                    src="/placeholder.svg"
+                    src="/images/ECPAT_logo.png"
+                    width={140}
+                  />
+                  <img
+                    alt=""
+                    className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
+                    height={140}
+                    src="/images/Emblem_of_Ethiopia.svg.png"
+                    width={140}
+                  />
+                  <img
+                    alt=""
+                    className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
+                    height={140}
+                    src="/images/ethiopiaid-logo-with-stapline.jpg"
                     width={140}
                   />
                   <img
                     alt=""
                     className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
                     height={70}
-                    src="/placeholder.svg"
+                    src="/images/family-for-every-child-logo.png"
+                    width={140}
+                  />
+                </div>
+              </CarouselItem>
+              <CarouselItem>
+
+                <div className="flex items-center justify-center flex-wrap md:flex-nowrap gap-6 p-6 ">
+                  <img
+                    alt=""
+                    className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
+                    height={70}
+                    src="/images/freedom-fund-logo.svg"
+                    width={140}
+                  />
+                  <img
+                    alt=""
+                    className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
+                    height={140}
+                    src="/images/EW1ousPXYAAI_L4.jpg"
+                    width={140}
+                  />
+                  <img
+                    alt=""
+                    className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
+                    height={140}
+                    src="/images/iom.jpg"
+                    width={140}
+                  />
+                  <img
+                    alt=""
+                    className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
+                    height={140}
+                    src="/images/kinderpostzegels.png"
                     width={140}
                   />
                   <img
                     alt=""
                     className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
                     height={70}
-                    src="/placeholder.svg"
+                    src="/images/Logo-Kindernothilfe.svg.png"
+                    width={140}
+                  />
+                </div>
+              </CarouselItem>
+              <CarouselItem>
+
+                <div className="flex items-center justify-center flex-wrap md:flex-nowrap gap-6 p-6 ">
+                  <img
+                    alt=""
+                    className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
+                    height={70}
+                    src="/images/Plan-logo.png"
                     width={140}
                   />
                   <img
                     alt=""
                     className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
                     height={70}
-                    src="/placeholder.svg"
+                    src="/images/Logo-of-Ethiopian-Ministry-of-Labor-and-Social-Affairs.jpg"
                     width={140}
                   />
                   <img
                     alt=""
                     className="aspect-[2/1] object-contain opacity-50 transition-opacity hover:opacity-100"
-                    height={70}
-                    src="/placeholder.svg"
+                    height={140}
+                    src="/images/stop-child-explo.webp"
                     width={140}
                   />
 
                 </div>
-
               </CarouselItem>
             </CarouselContent>
             <CarouselPrevious />
