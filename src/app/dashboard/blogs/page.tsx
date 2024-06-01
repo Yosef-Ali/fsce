@@ -1,4 +1,4 @@
-
+"use client";
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -6,8 +6,14 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CirclePlusIcon, FileIcon, ListFilterIcon, MoreHorizontal, MoveHorizontalIcon } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function Blogs() {
+  const router = useRouter();
+
+  const handleAddPost = () => {
+    router.push('/dashboard/blogs/add-post');
+  };
   return (
     <>
       <main className="grid flex-1 items-start gap-4 px-4 sm:px-6 py-24 md:gap-8"  >
@@ -41,10 +47,11 @@ export default function Blogs() {
                 <FileIcon className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
               </Button>
-              <Button className="h-8 gap-1" size="sm">
+              <Button className="h-8 gap-1" size="sm" onClick={handleAddPost}>
                 <CirclePlusIcon className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Add Post</span>
               </Button>
+
             </div>
           </div>
           <TabsContent value="all">

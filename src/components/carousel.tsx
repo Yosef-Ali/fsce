@@ -41,7 +41,7 @@ export default function CarouselSection() {
                 className="w-full h-full rounded"
               />
               <div
-                className="absolute bottom-0 left-0 p-8 bg-opacity-50 bg-black text-white rounded-tr-md animate-fadeIn duration-500 delay-200"
+                className="absolute bottom-0 left-0 p-8 text-white  animate-fadeIn duration-500 delay-200"
                 style={{ bottom: 0, left: 0 }} // Add this style
               >
                 <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1] text-balance">
