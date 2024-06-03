@@ -1,71 +1,83 @@
-"use client";
-
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { PlusCircle, Upload } from 'lucide-react';
+import { Grid, PlusCircle, Upload } from 'lucide-react';
 import { CldImage, CldUploadButton, CloudinaryUploadWidgetResults, CloudinaryUploadWidgetInfo } from 'next-cloudinary';
 import { useState } from "react";
+import UploadButton from './upload-button';
+import cloudinary from "cloudinary"
+import CloudinaryImage from './cloudinary-image';
+import FavoritesList from './favorites-list';
+import { ForceRefresh } from './force-refresh';
+import GalleryGrid from './gallery-grid';
 
-export default function Media() {
-  const [imageId, setImageId] = useState<string | null>(null);
+export type SearchResult = {
+  public_id: string;
+  tags: string[];
+};
 
+export default async function Media() {
+  let results: { resources: SearchResult[] } = { resources: [] };
+  let results_favorites: { resources: SearchResult[] } = { resources: [] };
+
+
+  try {
+    results = (await cloudinary.v2.search
+      .expression('resource_type:image AND folder:FSCE')
+      .sort_by('created_at', 'desc')
+      .with_field('tags')
+      .max_results(30)
+      .execute()) as { resources: SearchResult[] };
+
+    results_favorites = (await cloudinary.v2.search
+      .expression('resource_type:image AND folder:FSCE AND tags=favorite')
+      .sort_by('created_at', 'desc')
+      .with_field('tags')
+      .max_results(30)
+      .execute()) as { resources: SearchResult[] };
+  } catch (error) {
+    console.error('Error fetching data from Cloudinary:', error);
+    // Handle the error, e.g., show an error message to the user
+  }
+
+  console.log(results_favorites);
   return (
-    // <main className="grid px-4 sm:px-6 py-24 gap-4">
-    //   <div className="flex items-center">
-    //     <CldUploadButton
-    //       onSuccess={(results: CloudinaryUploadWidgetResults) => {
-    //         if (results.event === "success" && results.info) {
-    //           const info = results.info as CloudinaryUploadWidgetInfo;
-    //           setImageId(info.secure_url);
-    //         } else {
-    //           console.error("Image upload failed:", results.event);
-    //         }
-    //       }}
-    //       uploadPreset="fsce2024"
-    //     />
-    //   </div>
-    //   {imageId && (
-    //     <CldImage
-    //       width="960"
-    //       height="600"
-    //       src={imageId}
-    //       sizes="100vw"
-    //       alt="Description of my image"
-    //     />
-    //   )}
-    // </main>
 
     <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-24 md:gap-8">
+      <ForceRefresh />
       <Tabs defaultValue="all">
         <div className="flex items-center">
           <TabsList>
             <TabsTrigger value="all">Gallery</TabsTrigger>
-            <TabsTrigger value="active">Favorite</TabsTrigger>
-            <TabsTrigger value="draft">Video</TabsTrigger>
+            <TabsTrigger value="Favorite">Favorite</TabsTrigger>
+            <TabsTrigger value="Video">Video</TabsTrigger>
           </TabsList>
           <div className="ml-auto flex items-center gap-2">
-
-            <Button asChild size="sm" className="h-8 gap-1" >
-              <div className="flex items-center gap-1">
-                <Upload className="h-3.5 w-3.5" />
-                <CldUploadButton
-                  onSuccess={(results: CloudinaryUploadWidgetResults) => {
-                    if (results.event === "success" && results.info) {
-                      const info = results.info as CloudinaryUploadWidgetInfo;
-                      setImageId(info.secure_url);
-                    } else {
-                      console.error("Image upload failed:", results.event);
-                    }
-                  }}
-                  uploadPreset="fsce2024"
-                />
-              </div>
-            </Button>
+            <UploadButton />
           </div>
         </div>
         <TabsContent value="all">
-          <Card x-chunk="dashboard-05-chunk-3">Car image </Card>
+          <Card>
+            <CardHeader className="px-7">
+              <CardTitle>Gallery</CardTitle>
+              <CardDescription>All images in your account.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ForceRefresh />
+              <GalleryGrid images={results.resources} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="Favorite">
+          <Card>
+            <CardHeader className="px-7">
+              <CardTitle>Favorite</CardTitle>
+              <CardDescription>All favorite images in your account.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <FavoritesList initialResources={results_favorites.resources} />
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </main>
