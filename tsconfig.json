@@ -32,7 +32,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/(others)/home/FeaturedPosts.tsx"
+    "src/components/FeaturedPosts.tsx"
   ],
   "exclude": [
     "node_modules"

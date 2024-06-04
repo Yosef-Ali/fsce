@@ -1,42 +1,77 @@
+'use client';
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import React, { FC } from 'react';
-import PostCard from './PostCard';
+interface Post {
+  title: string;
+  slug: string;
+  image: string;
+  category: string;
+  excerpt: string;
+}
 
-const FeaturedPosts: FC = () => {
-  const featuredPosts = [
+interface FeaturedPostsProps {
+  posts: Post[];
+}
 
-    {
-      title: 'How To Make More Travel By Doing Less',
-      slug: 'how-to-make-more-travel-by-doing-less',
-      image: 'https://images.unsplash.com/photo-1539635278303-d4002c07eae3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=770&q=80',
-      author: 'Page',
-      date: 'December 02, 2019',
-      excerpt: 'Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast...'
-    },
-    {
-      title: 'Do You Make These Simple Mistakes In Travel?',
-      slug: 'do-you-make-these-simple-mistakes-in-travel',
-      image: 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=340&q=80',
-      author: 'John Doe',
-      date: 'October 10, 2019',
-      excerpt: 'Far far away, behind the word mountains, far from the countries...'
-    },
-    {
-      title: 'Use Travel To Make Someone Fall In Love With You',
-      slug: 'use-travel-to-make-someone-fall-in-love-with-you',
-      image: 'https://images.unsplash.com/photo-1530789253388-582c481c54b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=340&q=80',
-      author: 'Jane Smith',
-      date: 'December 15, 2019',
-      excerpt: 'Far far away, behind the word mountains, far from the countries...'
-    }
-  ];
-
+const FeaturedPosts: React.FC<FeaturedPostsProps> = ({ posts }) => {
   return (
-    <div className="mr-2 md:mr-4 ml-2">
-      {featuredPosts.map((post, index) => (
-        <div key={index} className="pb-10">
-          <PostCard post={post} />
-        </div>
+    <div>
+      {posts.map((post, index) => (
+        <React.Fragment key={index}>
+          {index % 5 === 0 && (
+            <div className="mb-8 w-full w-[640px]">
+              <Link href={`/article/${post.slug}`}>
+                <Image
+                  className="h-full w-full object-cover rounded-sm"
+                  src={post.image}
+                  alt={post.title}
+                  height={300} // Set the height to 350px here
+                  width={640} // It's a good practice to set the width as well
+                />
+                <div className="mt-4">
+                  <div className="text-sm font-semibold text-gray-500 uppercase mb-2">
+                    {post.category}
+                  </div>
+                  <h2 className="text-2xl font-bold mb-2">{post.title}</h2>
+                  <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                  <div className="text-sm font-semibold text-blue-500">
+                    Read More...
+                  </div>
+                </div>
+              </Link>
+            </div>
+          )}
+
+          {index % 5 === 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              {posts.slice(index, index + 4).map((post, idx) => (
+                <div key={idx} className="bg-white rounded overflow-hidden ">
+                  <Link href={`/article/${post.slug}`}>
+                    <Image
+                      className="w-full h-64 object-cover"
+                      src={post.image}
+                      alt={post.title}
+                      width={640}
+                      height={360}
+                    />
+                    <div className="p-4">
+                      <div className="text-sm font-semibold text-gray-500 uppercase mb-2">
+                        {post.category}
+                      </div>
+                      <h2 className="text-lg font-bold mb-2">{post.title}</h2>
+                      <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                      <div className="text-sm font-semibold text-blue-500">
+                        Read More...
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
+        </React.Fragment>
       ))}
     </div>
   );

@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils"
 import "./globals.css";
 import { Providers } from "./providers";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Header } from "@/components/header";
+import Footer from "@/components/footer";
 
 
 const fontSans = FontSans({
