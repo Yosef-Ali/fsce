@@ -2,7 +2,11 @@ import Image from "next/image";
 import { Upload } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-export const ImageUploader = () => {
+type imageProps = {
+  imageUrl?: string;
+};
+
+export const ImageUploader = ({ imageUrl: imageUrl }: imageProps = { imageUrl: "" }) => {
   return (
     <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
       <CardHeader>
@@ -15,7 +19,7 @@ export const ImageUploader = () => {
             alt="Product image"
             className="aspect-square w-full rounded-md object-cover"
             height={300}
-            src="/images/placeholder.svg"
+            src={imageUrl || "/images/placeholder.svg"}
             width={300}
           />
           <div className="grid grid-cols-3 gap-2">

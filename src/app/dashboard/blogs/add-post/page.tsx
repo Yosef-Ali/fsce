@@ -1,38 +1,21 @@
 "use client";
-import Image from "next/image"
-import Link from "next/link"
 import {
   ChevronLeft,
   Upload,
 } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-
-
 import { useRouter } from "next/navigation"
 import { BreadcrumbNavigation } from "@/components/dashboard/breadcrumb-navigation";
 import { PostDetailsForm } from "@/components/dashboard/post-details-form";
-import { CategorySelect } from "@/components/dashboard/category-select";
 import { PostStatusSelect } from "@/components/dashboard/post-status-select";
 import { ImageUploader } from "@/components/dashboard/image-uploader";
+import { useState } from "react";
 
-const categories = [
-  { value: "about", label: "About" },
-  { value: "programs", label: "Programs" },
-  { value: "event", label: "Event" },
-  { value: "news", label: "News" },
-  { value: "other", label: "Other" },
-];
 
 export default function AddPost() {
   const router = useRouter();
+  const [imageUrl, setImageUrl] = useState('');
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40 flex-1 overflow-y-auto pt-14 lg:pt-[60px]">
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
@@ -46,30 +29,19 @@ export default function AddPost() {
               </Button>
               <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">Back to Blogs</h1>
               <div className="hidden items-center gap-2 md:ml-auto md:flex">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" >
                   Draft
                 </Button>
-                <Button size="sm">Save changes</Button>
+                <Button size="sm" >Save changes</Button>
               </div>
             </div>
             <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
               <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-                <PostDetailsForm />
-                <Card x-chunk="dashboard-07-chunk-2">
-                  <CardHeader>
-                    <CardTitle>Categories</CardTitle>
-                    <CardDescription>Choose categories for your blog post.</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-6 w-full">
-                      <CategorySelect options={categories} />
-                    </div>
-                  </CardContent>
-                </Card>
+                <PostDetailsForm onImageUrlChange={setImageUrl} />
               </div>
               <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
                 <PostStatusSelect />
-                <ImageUploader />
+                <ImageUploader imageUrl={imageUrl} />
               </div>
             </div>
             <div className="flex items-center justify-center gap-2 md:hidden">
@@ -84,4 +56,5 @@ export default function AddPost() {
     </div>
   )
 }
+
 

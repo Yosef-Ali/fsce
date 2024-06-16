@@ -1,8 +1,8 @@
 "use client"
 
 import React from 'react';
-import { FacebookIcon, TwitterIcon, GithubIcon, InstagramIcon, HomeIcon, EmailIcon, TelephoneIcon, FaxIcon, } from './icons';
-import Logo from './logo';
+import { FacebookIcon, TwitterIcon, GithubIcon, InstagramIcon, HomeIcon, EmailIcon, TelephoneIcon, FaxIcon, } from '../icons';
+import Logo from '../logo';
 
 
 interface FooterNavItem {

@@ -5,8 +5,7 @@ import { cn } from "@/lib/utils"
 import "./globals.css";
 import { Providers } from "./providers";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Header } from "@/components/header";
-import Footer from "@/components/footer";
+import MainLayout from "@/components/Layout/MainLayout";
 
 
 const fontSans = FontSans({
@@ -34,9 +33,7 @@ export default function RootLayout({
       >
         <TooltipProvider>
           <Providers>
-            {/* <Header /> */}
             {children}
-            {/* <Footer /> */}
           </Providers>
         </TooltipProvider>
       </body>

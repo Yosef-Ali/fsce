@@ -79,6 +79,7 @@ export default function Categories() {
           </CardContent>
         </Card>
         <CategoriesDialog open={openCategories} setOpen={setOpenCategories} />
+
       </main>
     </>
   )

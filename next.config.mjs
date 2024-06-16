@@ -1,9 +1,18 @@
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // config options images
+  // config options for images
   images: {
-    domains: ['images.unsplash.com'],
+    // remotePatterns should be an array of objects, not strings
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+    ],
   },
 };
 

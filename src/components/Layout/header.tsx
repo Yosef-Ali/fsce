@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { useSession } from "@clerk/nextjs";
 import Link from "next/link";
-import Logo from './logo';
+import Logo from '../logo';
 import { usePathname } from 'next/navigation';
-import { ModeToggle } from '../app/mode-toggle';
+import { ModeToggle } from '@/app/mode-toggle';
 import Image from 'next/image';
 
 interface LinkProps {
@@ -31,7 +31,7 @@ export const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const { isSignedIn } = useSession();
-  const isDashboard = pathname === "/dashboard";
+  const isDashboard = pathname === "/dashboard/blogs";
 
   const navigationItems = [
     { href: "/", label: "Home" },
@@ -81,7 +81,7 @@ export const Header: React.FC = () => {
                 <li
                   className="py-8 px-4 border-b border-gray-300 border-opacity-0 hover:border-opacity-100 hover:text-gray-500 duration-200 cursor-pointer"
                 >
-                  <ActiveLink href="/dashboard">Dashboard</ActiveLink>
+                  <ActiveLink href="/dashboard/blogs">Dashboard</ActiveLink>
                 </li>
               )}
             </ul>

@@ -1,17 +1,16 @@
 import { BookOpenIcon, CircleUser, Home, ImageIcon, LineChart, Menu, Package, Package2, Search, Settings, ShoppingCart, TagIcon, Users } from "lucide-react"
-import { Button } from "../ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet"
+import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import Link from "next/link"
-import { Badge } from "../ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
-import { Input } from "../ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { UsersIcon } from "../icons"
 
 const Header: React.FC = () => {
 
   return (
-    <header className="fixed top-0 left-0 md:left-[220px] lg:left-[280px] z-30 flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 md:w-[calc(100%-220px)] lg:w-[calc(100%-280px)] w-full">
+    <header className="fixed top-0 left-0 md:left-[220px] lg:left-[280px] z-30 flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 md:w-[calc(100%-220px)] lg:w-[calc(100%-280px)] ">
       <Sheet>
         <SheetTrigger asChild>
           <Button
@@ -44,9 +43,8 @@ const Header: React.FC = () => {
             >
               <BookOpenIcon className="h-4 w-4" />
               Blogs
-              <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                6
-              </Badge>
+              <Badge variant="outline" className="ml-auto">6</Badge>
+
             </Link>
             <Link
               href="/dashboard/categories"
@@ -82,14 +80,14 @@ const Header: React.FC = () => {
           </div>
         </SheetContent>
       </Sheet>
-      <div className="w-full flex-1">
+      <div className="flex-1 w-full">
         <form>
-          <div className="relative">
+          <div className="relative ml-auto flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search products..."
-              className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
+              placeholder="Search..."
+              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
             />
           </div>
         </form>

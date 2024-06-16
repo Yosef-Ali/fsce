@@ -1,18 +1,9 @@
+import MainLayout from '@/components/Layout/MainLayout';
 
-
-import Footer from "@/components/footer";
-import { Header } from "../../components/header";
-
-export default function RootLayout({
-  children,
-}: Readonly<{
+type Props = {
   children: React.ReactNode;
-}>) {
-  return (
-    <>
-      <Header />
-      {children}
-      < Footer />
-    </>
-  );
+};
+
+export default function DashboardRootLayout({ children }: Props) {
+  return <MainLayout>{children}</MainLayout>;
 }

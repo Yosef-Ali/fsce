@@ -1,6 +1,5 @@
-
-
 import FeaturedPosts from "@/components/FeaturedPosts"
+import MainLayout from "@/components/Layout/MainLayout";
 import Sidebar from "@/components/Sidebar"
 
 import CarouselSection from "@/components/carousel"
@@ -38,34 +37,35 @@ const featuredPosts = [
 ];
 
 
-
-export default function HomePosts() {
-  //const stars = await getGitHubStars()
+export default function Home() {
 
   return (
-    <>
-      <div className="bg-gray-100">
-        <div className="max-w-5xl mx-auto pt-8 pb-8">
-          <div className="flex flex-wrap -mx-2 ">
-            <CarouselSection />
+    <MainLayout>
+      <main className="flex min-h-screen flex-col  justify-between">
+        <div className="bg-gray-100">
+          <div className="max-w-5xl mx-auto pt-8 pb-8">
+            <div className="flex flex-wrap -mx-2 ">
+              <CarouselSection />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-5xl mx-auto pt-10">
-        <div className="flex flex-wrap overflow-hidden">
-          <div className="w-full  overflow-hidden md:w-4/6 lg:w-4/6 xl:w-4/6">
-            {/* Pass the featuredPosts array to the FeaturedPosts component */}
-            <FeaturedPosts posts={featuredPosts} />
+        <div className="max-w-5xl mx-auto pt-10">
+          <div className="flex flex-wrap overflow-hidden">
+            <div className="w-full  overflow-hidden md:w-4/6 lg:w-4/6 xl:w-4/6">
+              {/* Pass the featuredPosts array to the FeaturedPosts component */}
+              <FeaturedPosts posts={featuredPosts} />
+            </div>
+            <div className="w-full overflow-hidden md:w-2/6 lg:w-2/6 xl:w-2/6">
+              <Sidebar />
+            </div>
           </div>
-          <div className="w-full overflow-hidden md:w-2/6 lg:w-2/6 xl:w-2/6">
-            <Sidebar />
+          <div className="flex w-full">
+            <Partners />
           </div>
         </div>
-        <div className="flex w-full">
-          <Partners />
-        </div>
-      </div>
-    </>
-  )
+      </main>
+    </MainLayout>
+  );
 }
+

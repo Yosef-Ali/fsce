@@ -13,7 +13,7 @@ const convex = new ConvexReactClient(
 
 export function Providers({ children }: PropsWithChildren) {
   return (
-    <ClerkProvider>
+    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
         <ThemeProvider
           attribute="class"
