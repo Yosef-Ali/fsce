@@ -4,9 +4,23 @@ import { Webhook } from "svix";
 
 import { internal } from "./_generated/api";
 import { httpAction } from "./_generated/server";
-import { ConvexError, v } from "convex/values";
 
+// Define the allowed user roles
+type UserRole = "author" | "user" | "admin" | "org:admin";
 
+// Function to map Clerk roles to your application roles
+function mapClerkRoleToUserRole(clerkRole: string): UserRole {
+  switch (clerkRole.toLowerCase()) {
+    case "admin":
+      return "admin";
+    case "author":
+      return "author";
+    case "org:admin":
+      return "org:admin";
+    default:
+      return "user";
+  }
+}
 
 const handleClerkWebhook = httpAction(async (ctx, request) => {
   const event = await validateRequest(request);
@@ -16,28 +30,58 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
   switch (event.type) {
     case "user.created":
       await ctx.runMutation(internal.users.createUser, {
-        clerkId: event.data.id,
+        clerkId: event.data.id as string,
         email: event.data.email_addresses[0].email_address,
         imageUrl: event.data.image_url,
         name: event.data.first_name!,
-        role: "author",
+        role: "user", // Default role
+        active: "inactive",
       });
       break;
     case "user.updated":
-     // Replace this with the actual function or method to generate the userId
-      await ctx.runMutation(internal.users.updateUser, {
+      await ctx.runMutation(internal.users.updateUserInternally, {
         clerkId: event.data.id,
         email: event.data.email_addresses[0].email_address,
         imageUrl: event.data.image_url,
-        name: event.data.first_name!,
-        role: "author",
+        name: event.data.first_name || "Unknown",
       });
       break;
     case "user.deleted":
-      await ctx.runMutation(internal.users.deleteUser, {
+      await ctx.runMutation(internal.users.deleteUserInternally, {
         clerkId: event.data.id as string,
       });
+      await ctx.runMutation(internal.organizations.removeMember, {
+        userId: event.data.id as string,
+      });
       break;
+    case "organizationMembership.created":
+      await ctx.runMutation(internal.organizations.addMember, {
+        organizationId: event.data.organization.id,
+        userId: event.data.public_user_data.user_id,
+        role: mapClerkRoleToUserRole(event.data.role)
+      });
+      break;
+    case "organizationMembership.updated":
+      const mappedRole = mapClerkRoleToUserRole(event.data.role);
+      await ctx.runMutation(internal.organizations.updateMember, {
+        userId: event.data.public_user_data.user_id,
+        role: mappedRole
+      });
+      await ctx.runMutation(internal.users.updateUserRoleInternal, {
+        clerkId: event.data.public_user_data.user_id,
+        userRole: mappedRole
+      });
+      break;
+    case "organizationMembership.deleted":
+      await ctx.runMutation(internal.organizations.removeMember, {
+        userId: event.data.public_user_data.user_id,
+      });
+      await ctx.runMutation(internal.users.deleteUserInternally, {
+        clerkId: event.data.public_user_data.user_id,
+      });
+      break;
+    default:
+      console.log("Unhandled event type:", event.type);
   }
   return new Response(null, {
     status: 200,

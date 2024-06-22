@@ -6,6 +6,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import MainLayout from "@/components/Layout/MainLayout";
+import { Toaster } from "@/components/ui/toaster"
 
 
 const fontSans = FontSans({
@@ -34,6 +35,7 @@ export default function RootLayout({
         <TooltipProvider>
           <Providers>
             {children}
+            <Toaster />
           </Providers>
         </TooltipProvider>
       </body>

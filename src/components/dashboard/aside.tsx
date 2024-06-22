@@ -1,17 +1,17 @@
 
 import Link from "next/link"
 import {
-  Bell,
   BookOpenIcon,
-  Home,
   ImageIcon,
   Package2,
   Settings,
   TagIcon,
   UsersIcon,
 } from "lucide-react"
-import { Button } from "../ui/button"
+
 import { Badge } from "../ui/badge"
+import IsAdminsOnly from "./is-admin"
+import NotificationsComponent from "./notifications"
 
 const Aside: React.FC = () => {
 
@@ -24,14 +24,12 @@ const Aside: React.FC = () => {
             <Link href="/" className="flex items-center gap-2 font-semibold">
               <img src="/logo.svg" alt="logo" className="h-8" />
             </Link>
-            <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
-              <Bell className="h-4 w-4" />
-              <span className="sr-only">Toggle notifications</span>
-            </Button>
+            <div className="relative ml-auto h-8 w-8 ">
+              <NotificationsComponent />
+            </div>
           </div>
           <div className="flex-1">
             <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-
               <Link
                 href="/dashboard/blogs"
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
@@ -49,14 +47,16 @@ const Aside: React.FC = () => {
                 <TagIcon className="h-4 w-4" />
                 Categories
               </Link>
-
-              <Link
-                href="/dashboard/users"
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              >
-                <UsersIcon className="h-4 w-4" />
-                Users
-              </Link>
+              {/*  call to the component is-admin.tsx to check if the user is an admin or not and if it is, show the link to the users page */}
+              <IsAdminsOnly >
+                <Link
+                  href="/dashboard/users"
+                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                >
+                  <UsersIcon className="h-4 w-4" />
+                  Users
+                </Link>
+              </IsAdminsOnly>
               <Link
                 href="/dashboard/media"
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"

@@ -1,6 +1,6 @@
 
+import { Id } from "../convex/_generated/dataModel";
 import type { Icon } from "lucide-react"
-
 import { Icons } from "@/components/icons"
 
 export type NavItem = {
@@ -67,3 +67,24 @@ export interface Post {
   date: string;
   excerpt: string;
 }
+
+export interface Category {
+  _id: Id<"categories">;
+  _creationTime: number;
+  title: string;
+  description: string;
+}
+
+export interface User {
+  _id: Id<"users">;
+  _creationTime: number;
+  active?: "active" | "inactive" | undefined;
+  role?: string | undefined;
+  email: string;
+  imageUrl: string;
+  clerkId: string;
+  name: string;
+}
+
+export type UserRole = "author" | "user" | "admin" | "org:admin";
+export type UserStatus = "active" | "inactive";

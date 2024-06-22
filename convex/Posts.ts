@@ -1,3 +1,4 @@
+import { auth } from "@clerk/nextjs/dist/types/server";
 import { mutation, query } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 
@@ -6,23 +7,41 @@ export const createPost = mutation({
     title: v.string(),
     slug: v.string(),
     image: v.string(),
-    body: v.string(),
+    content: v.string(),
+    excerpt: v.string(),
+    published: v.boolean(),
     categories: v.string(),
+    author: v.string(),
+    authorId: v.string(),
+    authorImageUrl: v.string(),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
+
     if (!identity) {
-      throw new ConvexError("Unauthorized");
+      throw new ConvexError("User not authenticated");
     }
-    const user = await ctx.db.query("users")
-      .filter((q) => q.eq(q.field("clerkId"), identity.subject))
-      .first();
-    if (!user) {
+
+    const user = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("email"), identity.email))
+      .collect();
+
+    if (user.length === 0) {
       throw new ConvexError("User not found");
     }
+
     return await ctx.db.insert("posts", {
-      ...args,
-      author: user, // Store the entire user object in the author field
+      title: args.title,
+      slug: args.slug,
+      image: args.image,
+      content: args.content,
+      excerpt: args.excerpt,
+      published: args.published,
+      categories: args.categories,
+      author: args.author,
+      authorId: args.authorId,
+      authorImageUrl: args.authorImageUrl,
     });
   },
 });
@@ -31,26 +50,39 @@ export const createPost = mutation({
 export const updatePost = mutation({
   args: {
     id: v.id("posts"),
-    title: v.optional(v.string()),
-    slug: v.optional(v.string()),
-    image: v.optional(v.string()),
-    body: v.optional(v.string()),
-    categories: v.optional(v.string()),
+    title: v.string(),
+    slug: v.string(),
+    image: v.string(),
+    content: v.string(),
+    excerpt: v.string(),
+    published: v.boolean(),
+    categories: v.string(),
+    authorId: v.id("users"),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
+
     if (!identity) {
-      throw new ConvexError("Unauthorized");
+      throw new ConvexError("User not authenticated");
     }
+
     const post = await ctx.db.get(args.id);
     if (!post) {
       throw new ConvexError("Post not found");
     }
-    const author = post.author; // Access the author object directly from the post
-    if (author.clerkId !== identity.subject) {
+    if (post.authorId !== args.authorId) {
       throw new ConvexError("Unauthorized");
     }
-    return await ctx.db.patch(args.id, args);
+    return await ctx.db.patch(args.id, {
+      title: args.title,
+      slug: args.slug,
+      image: args.image,
+      content: args.content,
+      excerpt: args.excerpt,
+      published: args.published,
+      categories: args.categories,
+      authorId: args.authorId,
+    });
   },
 });
 
@@ -60,13 +92,14 @@ export const deletePost = mutation({
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      throw new ConvexError("Unauthorized");
+      throw new ConvexError("User not authenticated");
     }
+    const userId = identity.subject;
     const post = await ctx.db.get(args.id);
     if (!post) {
       throw new ConvexError("Post not found");
     }
-    if (post.author.clerkId !== identity.subject) {
+    if (post.authorId !== userId) {
       throw new ConvexError("Unauthorized");
     }
     return await ctx.db.delete(args.id);

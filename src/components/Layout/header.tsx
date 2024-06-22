@@ -1,12 +1,15 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
 import { useSession } from "@clerk/nextjs";
 import Link from "next/link";
 import Logo from '../logo';
 import { usePathname } from 'next/navigation';
 import { ModeToggle } from '@/app/mode-toggle';
 import Image from 'next/image';
+import { useQuery } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
+import Authenticated from '../authenticated';
 
 interface LinkProps {
   href: string;
@@ -77,13 +80,13 @@ export const Header: React.FC = () => {
                   <ActiveLink href={item.href}>{item.label}</ActiveLink>
                 </li>
               ))}
-              {isSignedIn && (
+              <Authenticated>
                 <li
                   className="py-8 px-4 border-b border-gray-300 border-opacity-0 hover:border-opacity-100 hover:text-gray-500 duration-200 cursor-pointer"
                 >
                   <ActiveLink href="/dashboard/blogs">Dashboard</ActiveLink>
                 </li>
-              )}
+              </Authenticated>
             </ul>
           </nav>
           <div
