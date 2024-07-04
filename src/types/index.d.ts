@@ -110,3 +110,9 @@ export type EditorContent = string | CustomJSONContent;
 
 export type UserRole = "author" | "user" | "admin" | "org:admin";
 export type UserStatus = "active" | "inactive";
+
+export interface SearchResult {
+  public_id: string;
+  tags: string[]; // Add the tags property
+  // Add any other properties that should be part of SearchResult
+}

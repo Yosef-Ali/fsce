@@ -15,21 +15,27 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export type SearchResult = {
-  public_id: string;
-  tags: string[];
-  format: string; // Added this line
-};
+import { SearchResult } from '@/types'; // Update this path as necessary
 
-export default function CloudinaryImage(props: {
+interface CloudinaryImageProps {
   imageData: SearchResult;
-  path: string;
-  onUnfavorited: () => void;
   width: number;
   height: number;
-}) {
+  alt: string;
+  onUnfavorited: () => void;
+  path: string;
+}
+
+export default function CloudinaryImage({
+  imageData,
+  width,
+  height,
+  alt,
+  onUnfavorited,
+  path
+}: CloudinaryImageProps) {
   const router = useRouter();
-  const { imageData, width, height } = props;
+
   const [isFavorited, setIsFavorited] = useState(
     imageData.tags.includes("favorite")
   );
@@ -60,7 +66,7 @@ export default function CloudinaryImage(props: {
       <DialogTrigger asChild>
         <div className="relative cursor-pointer">
           <CldImage
-            {...props}
+            {...imageData}
             src={imageData.public_id}
             className="rounded-lg"
             width={width}
