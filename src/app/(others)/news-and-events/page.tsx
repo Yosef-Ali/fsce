@@ -6,24 +6,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import FeaturedPosts from "@/components/FeaturedPosts";
 import PostCard from "@/components/PostCard";
-
-export interface Post {
-  _id: string;
-  _creationTime: number;
-  updatedAt: number;
-  title: string;
-  slug: string;
-  image?: string;
-  content: any;
-  excerpt: string;
-  status: 'draft' | 'published' | 'achieved';
-  category: string;
-  author: {
-    id: string;
-    name: string;
-    imageUrl?: string;
-  };
-}
+import { Post } from '@/types'; // Adjust this path according to your project structure
 
 export default function NewsAndEventsPage() {
   const NewsPosts: Post[] = [
