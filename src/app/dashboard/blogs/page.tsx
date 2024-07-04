@@ -41,11 +41,12 @@ export default function Blogs() {
   };
 
   const handleEditPost = (slug: string) => {
-    const post = posts.find(p => p.slug === slug);
+    const post = posts.find((p: { slug: string }) => p.slug === slug);
     if (post) {
       router.push(`/dashboard/blogs/edit-post/${post.slug}`);
     }
   };
+
 
   const handleDeletePost = (id: Id<"posts">) => {
     setPostToDelete(id);
