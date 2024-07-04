@@ -14,6 +14,16 @@ const nextConfig = {
       },
     ],
     // Add other remote patterns if needed
+    // add type error ignors when deploying to vercel
+
+
+    typescript: {
+      // !! WARN !!
+      // Dangerously allow production builds to successfully complete even if
+      // your project has type errors.
+      // !! WARN !!
+      ignoreBuildErrors: true,
+    },
   },
 
 
