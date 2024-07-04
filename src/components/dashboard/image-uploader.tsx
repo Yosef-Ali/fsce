@@ -7,6 +7,7 @@ type imageProps = {
 };
 
 export const ImageUploader = ({ imageUrl: imageUrl }: imageProps = { imageUrl: "" }) => {
+
   return (
     <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
       <CardHeader>

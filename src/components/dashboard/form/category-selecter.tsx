@@ -1,17 +1,19 @@
-import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/components/ui/form";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useController } from "react-hook-form";
-const categories = {
-  ABOUT: "about",
-  PROGRAMS: "programs",
-  NEWS: "news",
-  EVENTS: "events",
-  OTHERS: "others",
-} as const;
 
-type CategoryValue = (typeof categories)[keyof typeof categories];
+type Category = {
+  _id: string;
+  _creationTime: number;
+  title: string;
+  description: string;
+};
 
-const CategorySelector = ({ control }: { control: any }) => {
+type CategorySelectorProps = {
+  control: any;
+  categories: Category[];
+};
+
+const CategorySelector = ({ control, categories }: CategorySelectorProps) => {
   const {
     field: { value, onChange },
   } = useController({
@@ -19,7 +21,6 @@ const CategorySelector = ({ control }: { control: any }) => {
     control,
   });
   return (
-
     <Select value={value} onValueChange={onChange}>
       <SelectTrigger>
         <SelectValue placeholder="Select category">
@@ -27,9 +28,9 @@ const CategorySelector = ({ control }: { control: any }) => {
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
-        {Object.values(categories).map((category: CategoryValue) => (
-          <SelectItem key={category} value={category}>
-            {category}
+        {categories.map((category: Category) => (
+          <SelectItem key={category._id} value={category.title}>
+            {category.title}
           </SelectItem>
         ))}
       </SelectContent>

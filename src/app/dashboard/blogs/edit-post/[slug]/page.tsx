@@ -1,6 +1,5 @@
 "use client"
-
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -8,15 +7,18 @@ import { BreadcrumbNavigation } from "@/components/dashboard/breadcrumb-navigati
 import { PostDetailsForm } from "@/components/dashboard/post-details-form";
 import { PostStatusSelect } from "@/components/dashboard/post-status-select";
 import { ImageUploader } from "@/components/dashboard/image-uploader";
-import { useToast } from "@/components/ui/use-toast";
+import { useQuery } from 'convex/react';
+import { api } from '../../../../../../convex/_generated/api';
 
 type PostStatus = "draft" | "published" | "archived";
 
-export default function AddPost() {
+export default function EditPost({ params }: { params: { slug: string } }) {
   const router = useRouter();
   const [imageUrl, setImageUrl] = useState('');
   const [status, setStatus] = useState<PostStatus>('draft');
-  const { toast } = useToast();
+
+
+  const existingPost = useQuery(api.posts.getPostBySlug, { slug: params.slug });
 
   const handleStatusChange = (newStatus: PostStatus) => {
     setStatus(newStatus);
@@ -27,13 +29,26 @@ export default function AddPost() {
   };
 
   const handleSave = () => {
-    toast({
-      title: "Saving post...",
-      description: "Please wait while we create your post.",
-    });
-    // This function is now just for showing the toast
-    // The actual saving is handled in PostDetailsForm
+    // Implement save logic here
+    console.log('Saving post with slug:', params.slug);
   };
+
+  const handleDraft = () => {
+    // Implement draft logic here
+    console.log('Saving as draft with slug:', params.slug);
+  };
+
+  const formattedPost = existingPost ? {
+    title: existingPost.title,
+    content: existingPost.content,
+    slug: existingPost.slug,
+    excerpt: existingPost.excerpt,
+    category: existingPost.category,
+    image: existingPost.image,
+    _id: existingPost._id, // Include this for updating the correct post
+  } : undefined;
+
+  console.log('Formatted Post:', formattedPost);
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40 flex-1 overflow-y-auto pt-14 lg:pt-[60px]">
@@ -47,27 +62,34 @@ export default function AddPost() {
                 <span className="sr-only">Back</span>
               </Button>
               <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                Add New Post
+                Edit Post: {params.slug}
               </h1>
               {/* <div className="hidden items-center gap-2 md:ml-auto md:flex">
-                <Button variant="outline" size="sm" onClick={() => handleStatusChange('draft')}>
+                <Button variant="outline" size="sm" onClick={handleDraft}>
                   Draft
                 </Button>
-                <Button size="sm" onClick={handleSave}>Save Post</Button>
+                <Button size="sm" onClick={handleSave}>Save changes</Button>
               </div> */}
             </div>
             <div className="grid gap-4 lg:grid-cols-3 md:gap-8">
+              {/* This div will be full width on small screens and 1/3 width on md and up, appearing first on md+ */}
               <div className="grid auto-rows-max items-start gap-4 lg:col-span-1 lg:order-2">
                 <PostStatusSelect initialStatus={status} onStatusChange={handleStatusChange} />
-                <ImageUploader imageUrl={imageUrl} />
-              </div>
-              <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:order-1">
-                <PostDetailsForm
-                  onImageUrlChange={handleImageUrlChange}
-                  postStatus={status}
-                />
+                <ImageUploader imageUrl={imageUrl || formattedPost?.image || ''} />
               </div>
 
+              {/* This div will be full width on small screens and 2/3 width on md and up, appearing second on md+ */}
+              <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:order-1">
+                {formattedPost ? (
+                  <PostDetailsForm
+                    onImageUrlChange={handleImageUrlChange}
+                    postStatus={status}
+                    post={formattedPost}
+                  />
+                ) : (
+                  <div>Loading post data...</div>
+                )}
+              </div>
             </div>
             {/* <div className="flex items-center justify-center gap-2 md:hidden">
               <Button variant="outline" size="sm" onClick={() => handleStatusChange('draft')}>
@@ -81,3 +103,4 @@ export default function AddPost() {
     </div>
   );
 }
+

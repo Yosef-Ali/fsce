@@ -59,14 +59,7 @@ export type SubscriptionPlan = {
 }
 
 
-export interface Post {
-  title: string;
-  slug: string;
-  image: string;
-  author: string;
-  date: string;
-  excerpt: string;
-}
+
 
 export interface Category {
   _id: Id<"categories">;
@@ -85,6 +78,35 @@ export interface User {
   clerkId: string;
   name: string;
 }
+
+export interface Post {
+  _id: Id<"posts">;
+  _creationTime: number;
+  updatedAt: number;
+  title: string;
+  slug: string;
+  image?: string;
+  content: any;
+  excerpt: string;
+  status: 'draft' | 'published' | 'achieved';
+  category: string;
+  author: {
+    id: string;
+    name: string;
+    imageUrl?: string;
+  };
+}
+
+
+export type CustomJSONContent = {
+  type: string;
+  content?: CustomJSONContent[];
+  text?: string;
+  attrs?: Record<string, any>;
+};
+
+export type EditorContent = string | CustomJSONContent;
+
 
 export type UserRole = "author" | "user" | "admin" | "org:admin";
 export type UserStatus = "active" | "inactive";

@@ -1,12 +1,16 @@
 "use client";
+
+import { useState, useEffect, useRef } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { useMutation, useQuery } from "convex/react";
+import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState, useRef, useEffect } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import ImageUploader from "./form/image-uploader";
-import * as z from "zod";
+import { JSONContent } from '@tiptap/core';
+import { useRouter } from 'next/navigation'; // Add this import
 
 
 import {
@@ -19,21 +23,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
+
+import ImageUploader from "./form/image-uploader";
 import CategorySelector from "./form/category-selecter";
-import NovelEditor from "./novel-text-editor";
+import NovelEditor, { EditorContent } from "./novel-text-editor";
+import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
 
-//const NovelEditor = dynamic(() => import("./novel-text-editor"), { ssr: false });
-
-
-const categories = {
-  ABOUT: 'about',
-  PROGRAMS: 'programs',
-  NEWS: 'news',
-  EVENTS: 'events',
-  OTHERS: 'others',
-} as const;
-
-export const formSchema = z.object({
+const formSchema = z.object({
   title: z.string().min(2, {
     message: "Title must be at least 2 characters.",
   }),
@@ -46,199 +43,263 @@ export const formSchema = z.object({
   excerpt: z.string().min(2, {
     message: "Excerpt must be at least 2 characters.",
   }),
-  imageUrl: z.string().url({
-    message: "Please enter a valid URL.",
-  }).optional(),
+  image: z.string().optional(),
   category: z.string().min(1, {
     message: "Please select a category.",
   })
 });
 
+type FormData = z.infer<typeof formSchema>;
 
-export const PostDetailsForm = ({ onImageUrlChange: onImageUrlChange }: { onImageUrlChange: (imageUrl: string) => void }) => {
-  const [imageId, setImageId] = useState<string | null>(null);
-  const [imageUrl, setImageUrl] = useState<string>("");
-  const [content, setContent] = useState<string>();
+interface PostDetailsFormProps {
+  onImageUrlChange: (imageUrl: string) => void;
+  post?: FormData & { _id: Id<"posts"> };
+  postStatus: "draft" | "published" | "archived";
+}
 
+export const PostDetailsForm: React.FC<PostDetailsFormProps> = ({ onImageUrlChange, post, postStatus }) => {
+  const [content, setContent] = useState<JSONContent>(
+    post?.content ? (typeof post.content === 'string' ? JSON.parse(post.content) : post.content)
+      : { type: 'doc', content: [] }
+  );
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const addPost = useMutation(api.posts.addPost);
+  const updatePost = useMutation(api.posts.updatePost);
+  const categories = useQuery(api.categories.list) || [];
+  const [resetTrigger, setResetTrigger] = useState(0);
+  const novelEditorRef = useRef<{ clearContent: () => void } | null>(null);
+  const { toast } = useToast();
+  const router = useRouter();
 
-
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      slug: "",
-      excerpt: "",
-      imageUrl: "",
-      content: "",
-      category: Object.values(categories)[2],
+      title: post?.title || "",
+      slug: post?.slug || "",
+      excerpt: post?.excerpt || "",
+      image: post?.image || "",
+      content: post?.content || "",
+      category: post?.category || "",
     },
   });
 
-  const handleImageId = (imageId: string | null) => {
-    setImageId(imageId);
-    form.setValue("imageUrl", imageId ?? "");
-    onImageUrlChange(imageId ?? "");
-  };
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log("Form values:", values);
-    console.log("Category value:", values.category);
-
-    // Add a check to see if the form values are empty
-    if (Object.values(values).every(value => value === "")) {
-      console.log("Form values are empty");
+  useEffect(() => {
+    if (categories.length > 0) {
+      form.setValue("category", categories[0].title);
     }
+  }, [categories, form]);
+
+  const handleImageId = (imageId: string | null) => {
+    const imageUrl = imageId ?? "";
+    form.setValue("image", imageUrl);
+    onImageUrlChange(imageUrl);
   };
 
-  const handleContentChange = (newContent: string) => {
-    setContent(newContent);
-    // Update the form value for content
-    form.setValue("content", newContent);
-    console.log("Updated content:", newContent);
-    // Log the updated content
+  const handleContentChange = (newContent: EditorContent) => {
+    let parsedContent: JSONContent;
+
+    if (typeof newContent === 'string') {
+      try {
+        parsedContent = JSON.parse(newContent);
+      } catch (error) {
+        console.error('Error parsing content:', error);
+        return;
+      }
+    } else {
+      parsedContent = newContent;
+    }
+
+    setContent(parsedContent);
+    form.setValue("content", JSON.stringify(parsedContent));
+  };
+
+  const resetForm = () => {
+    form.reset({
+      title: "",
+      slug: "",
+      excerpt: "",
+      image: "",
+      content: "",
+      category: categories[0]?.title || "",
+    });
+
+    setContent({ type: 'doc', content: [] });
+    onImageUrlChange("");
+
+    if (novelEditorRef.current) {
+      novelEditorRef.current.clearContent();
+    }
+    setResetTrigger(prev => prev + 1);
+  };
+
+  const onSubmit = async (values: FormData) => {
+    setIsSubmitting(true);
+    toast({
+      title: post ? "Updating post..." : "Creating post...",
+      description: `Please wait while we ${post ? 'update' : 'create'} your post.`,
+    });
+
+    try {
+      let result;
+      if (post) {
+        result = await updatePost({
+          id: post._id,
+          ...values,
+          status: postStatus,
+        });
+      } else {
+        result = await addPost({
+          ...values,
+          status: postStatus,
+        });
+      }
+
+      resetForm();
+      router.push('/dashboard/blogs');
+
+      toast({
+        title: "Success",
+        description: `Post ${post ? 'updated' : 'created'} successfully!`,
+        variant: "default",
+      });
+    } catch (error) {
+      console.error(post ? "Error updating post:" : "Error creating post:", error);
+      toast({
+        title: "Error",
+        description: `Failed to ${post ? 'update' : 'create'} post. Please try again.`,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const { watch } = form;
   const title = watch("title");
 
-  // Use useEffect to update the slug field when the title field changes
   useEffect(() => {
-    // Convert the title to lowercase and replace spaces with hyphens
     const slug = title.toLowerCase().replace(/\s+/g, '-');
-    // Update the slug field
     form.setValue("slug", slug);
   }, [title, form]);
 
-  // Watch the content field for changes
-
-
-
   useEffect(() => {
-    // Get the content from the state variable
-    const postContent = content;
-    console.log("postContent:", postContent);
-    // Check if postContent is defined
-    if (postContent) {
-      // Remove HTML tags and special characters
-      const cleanedContent = postContent.replace(/<[^>]*>?/gm, '').replace(/[^\w\s.]/g, '');
-      // Split the cleanedContent into words
+    if (content) {
+      const cleanedContent = JSON.stringify(content).replace(/<[^>]*>?/gm, '').replace(/[^\w\s.]/g, '');
       const words = cleanedContent.split(' ');
-      // Take the first 25 words
-      let excerpt = words.slice(0, 25).join(' ');
-      // If the last word is not a full word, remove it
+      let excerpt = words.slice(0, 15).join(' ');
       if (excerpt.charAt(excerpt.length - 1) !== '.') {
         excerpt = excerpt.slice(0, excerpt.lastIndexOf(' '));
       }
-      // Add an ellipsis to the end of the excerpt
-      excerpt += '...';
-      // Update the excerpt field
+
       form.setValue("excerpt", excerpt);
     }
-  }, [content]);
+  }, [content, form]);
 
-
-
+  useEffect(() => {
+    if (categories.length > 0 && !form.getValues('category')) {
+      form.setValue('category', categories[0].title, { shouldValidate: true, shouldDirty: true });
+    }
+  }, [categories, form]);
 
   return (
-    <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <Card >
-            <CardHeader>
-              <CardTitle>Post Details</CardTitle>
-              <CardDescription>create a new post</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem className="mb-4">
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Title" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is your post title.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="slug"
-                render={({ field }) => (
-                  <FormItem className="mb-4">
-                    <FormLabel>Slug</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Slug" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is your post slug.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div>
-                <p className="pb-2" >Content</p>
-                <NovelEditor onContentChange={handleContentChange} />
-              </div>
-              <FormField
-                control={form.control}
-                name="excerpt"
-                render={({ field }) => (
-                  <FormItem className="mb-4">
-                    <FormLabel>Excerpt</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Excerpt" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is your post excerpt.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Image</CardTitle>
-              <CardDescription className="text-sm text-red">Upload an image</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ImageUploader control={form.control} onImageId={handleImageId} />
-            </CardContent>
-          </Card>
-          <Card >
-            <CardHeader>
-              <CardTitle>Category</CardTitle>
-              <CardDescription>Select a category</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <CategorySelector control={form.control} />
-                    <FormDescription>
-                      Select a category for your post.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
-          {/* Repeat the above FormField for other fields */}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Post Details</CardTitle>
+            <CardDescription>Create a new post</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem className="mb-4">
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Title" {...field} />
+                  </FormControl>
+                  <FormDescription>This is your post title.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="slug"
+              render={({ field }) => (
+                <FormItem className="mb-4">
+                  <FormLabel>Slug</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Slug" {...field} />
+                  </FormControl>
+                  <FormDescription>This is your post slug.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div>
+              <p className="pb-2">Content</p>
+              <NovelEditor onContentChange={handleContentChange} content={content} ref={novelEditorRef} />
+            </div>
+            <FormField
+              control={form.control}
+              name="excerpt"
+              render={({ field }) => (
+                <FormItem className="mb-4">
+                  <FormLabel>Excerpt</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Excerpt" {...field} />
+                  </FormControl>
+                  <FormDescription>This is your post excerpt.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Image</CardTitle>
+            <CardDescription className="text-sm text-red">Upload an image (optional)</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ImageUploader control={form.control} onImageId={handleImageId} resetTrigger={resetTrigger} />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Category</CardTitle>
+            <CardDescription>Select a category</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <CategorySelector control={form.control} categories={categories} />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
+        <div className="text-right">
           <div className="text-right">
-            <Button type="submit" variant="default" style={{ backgroundColor: "#000", color: "#fff" }}>Submit</Button>
+            <Button
+              type="submit"
+              variant="default"
+              style={{ backgroundColor: "#000", color: "#fff" }}
+              disabled={isSubmitting || !form.formState.isDirty}
+            >
+              {isSubmitting ? "Submitting..." : (post ? "Update" : "Submit")}
+            </Button>
           </div>
-        </form>
-      </Form >
-    </>
+        </div>
+      </form>
+    </Form>
   );
 };
+
+

@@ -16,8 +16,6 @@ export function CategoryRow({ category }: CategoryRowProps) {
 
   const handleDelete = () => deleteCategory({ id: category._id });
   const handleEdit = () => {
-    // Implement edit functionality
-    console.log("Edit category", category._id);
   };
 
   return (

@@ -22,19 +22,24 @@ export default defineSchema({
   posts: defineTable({
     title: v.string(),
     slug: v.string(),
-    image: v.string(),
-    content: v.string(),
+    image: v.optional(v.string()),
+    content: v.any(),
     excerpt: v.string(),
-    published: v.boolean(),
-    categories: v.string(),
-    author: v.string(),
-    authorId: v.string(),
-    authorImageUrl: v.string(),
-  }).index("by_authorId", ["authorId"])
-    .index("by_slug", ["slug"])
-    .index("by_published", ["published"])
-    .index("by_categories", ["categories"])
-    .index("by_title", ["title"]),
+    status: v.union(v.literal("draft"), v.literal("published"), v.literal("archived")),
+    category: v.string(),
+    author: v.object({
+      id: v.string(),
+      name: v.string(),
+      image: v.string(),
+    }),
+    updatedAt: v.number()
+  })
+    .index("by_title", ["title"])
+    .index("by_status", ["status"])
+    .index("by_category", ["category"])
+    .index("by_author", ["author.id"])
+    .index("by_slug", ["slug"]),
+
 
   notifications: defineTable({
     clerkId: v.string(),
@@ -49,6 +54,17 @@ export default defineSchema({
     description: v.string(),
   }).index("by_title", ["title"]),
 
+  documents: defineTable({
+    title: v.string(),
+    content: v.any(), // This will store the Novel editor's JSON content
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    authorId: v.string(), // Assuming you have user authentication
+  })
+    .index("by_createdAt", ["createdAt"])
+    .index("by_authorId", ["authorId"])
 });
+
+
 
 

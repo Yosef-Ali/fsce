@@ -40,7 +40,6 @@ export default async function Media() {
     // Handle the error, e.g., show an error message to the user
   }
 
-  console.log(results_favorites);
   return (
 
     <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-24 md:gap-8">

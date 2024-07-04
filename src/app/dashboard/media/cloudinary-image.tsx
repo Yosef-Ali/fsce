@@ -1,53 +1,112 @@
+
 "use client";
-import { Heart } from 'lucide-react';
+
+import { Heart, Copy } from 'lucide-react';
 import { CldImage } from 'next-cloudinary';
 import { useRouter } from 'next/navigation';
-import { SearchResult } from './page';
 import { startTransition, useEffect, useState } from 'react';
 import { setAsFavoriteAction } from './actions';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-// ... rest of your code
+export type SearchResult = {
+  public_id: string;
+  tags: string[];
+};
 
-export default function CloudinaryImage(props: any & {
+export default function CloudinaryImage(props: {
   imageData: SearchResult;
   path: string;
   onUnfavorited: () => void;
+  width: number;
+  height: number;
 }) {
   const router = useRouter();
-  const { imageData } = props;
+  const { imageData, width, height } = props;
   const [isFavorited, setIsFavorited] = useState(
     imageData.tags.includes("favorite")
   );
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleFavoriteClick = () => {
+  const imageUrl = `https://res.cloudinary.com/demo/image/upload/${imageData.public_id}.${imageData.format}`;
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsFavorited(!isFavorited);
     startTransition(() => {
       setAsFavoriteAction(imageData.public_id, !isFavorited);
     });
-    // Refresh the page
     router.refresh();
-    console.log(isFavorited ? "Unfavorited" : "Favorited");
   };
 
+  const handleCopyUrl = () => {
+    navigator.clipboard.writeText(imageUrl);
+    // You might want to show a toast or some feedback here
+  };
 
   useEffect(() => {
-    // Refresh the page when isFavorited changes
     router.refresh();
-    console.log(isFavorited ? "Unfavorited" : "Favorited");
   }, [isFavorited, router]);
 
   return (
-    <div className="relative">
-      <CldImage
-        {...props}
-        src={imageData.public_id}
-        className="rounded-lg"
-      />
-      <Heart
-        onClick={handleFavoriteClick}
-        className="absolute top-2 right-2 hover:text-red-500 cursor-pointer text-white"
-        fill={isFavorited ? "red" : "none"}
-      />
-    </div>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DialogTrigger asChild>
+        <div className="relative cursor-pointer">
+          <CldImage
+            {...props}
+            src={imageData.public_id}
+            className="rounded-lg"
+            width={width}
+            height={height}
+            alt="Cloudinary Image"
+          />
+          <Heart
+            onClick={handleFavoriteClick}
+            className="absolute top-2 right-2 hover:text-red-500 cursor-pointer text-white"
+            fill={isFavorited ? "red" : "none"}
+          />
+        </div>
+      </DialogTrigger>
+      <DialogContent >
+        <div className="relative">
+          <CldImage
+            src={imageData.public_id}
+            width={800}
+            height={800}
+            alt="Enlarged Cloudinary Image"
+            className="w-full h-full object-contain"
+          />
+          <Heart
+            onClick={handleFavoriteClick}
+            className="absolute top-2 right-2 hover:text-red-500 cursor-pointer text-white text-2xl"
+            fill={isFavorited ? "red" : "none"}
+          />
+        </div>
+        <DialogFooter className="sm:justify-start p-4">
+          <div className="flex items-center space-x-2 w-full">
+            <Input
+              value={imageUrl}
+              readOnly
+              className="flex-grow"
+            />
+            <Button onClick={handleCopyUrl} size="sm" className="px-3">
+              <Copy className="h-4 w-4" />
+            </Button>
+          </div>
+          <DialogClose asChild>
+            <Button type="button" variant="secondary" className="mt-2">
+              Close
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

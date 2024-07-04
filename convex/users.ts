@@ -224,9 +224,7 @@ export const checkAccess = query({
       if (!user) {
         return { hasAccess: false, error: "User not found" };
       }
-
       const hasAccess = user.role === "admin" || user.role === "org:admin" || user.role === "author";
-      console.log("hasAccess", hasAccess);
       return { hasAccess, error: null };
     } catch (error) {
       // Type guard to check if error is an instance of Error
@@ -247,13 +245,10 @@ export const isAdmin = query({
       .query("users")
       .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
       .unique();
-    console.log("user", user);
     if (!user) {
       throw new ConvexError("User not found");
     }
-    console.log("user.role", user.role);
     return user.role === "admin" || user.role === "org:admin";
-
   }
 });
 

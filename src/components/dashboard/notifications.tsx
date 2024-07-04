@@ -21,8 +21,6 @@ const NotificationsComponent: React.FC = () => {
     await markAllAsRead();
   };
 
-  console.log(unreadNotifications);
-
   return (
     <Popover>
       <PopoverTrigger asChild>

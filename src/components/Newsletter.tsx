@@ -29,7 +29,6 @@ const Newsletter: FC = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Perform newsletter subscription logic
-    console.log('Subscribing:', { name, email, agreedToPrivacy });
   };
 
   return (
