@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Heart, Copy } from 'lucide-react';
@@ -19,6 +18,7 @@ import { Input } from "@/components/ui/input";
 export type SearchResult = {
   public_id: string;
   tags: string[];
+  format: string; // Added this line
 };
 
 export default function CloudinaryImage(props: {
