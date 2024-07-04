@@ -133,7 +133,7 @@ export async function POST(req: Request): Promise<Response> {
           {
             text: 'You are an AI writing assistant that continues existing text based on context from prior text. ' +
               'Give more weight/priority to the later characters than the beginning ones. ' +
-              'Limit your response to no more than 200 characters, but make sure to construct complete sentences.\n\n' +
+              'Limit your response to no more than 500 characters, but make sure to construct complete sentences.\n\n' +
               prompt
           }
         ]
@@ -143,7 +143,7 @@ export async function POST(req: Request): Promise<Response> {
       temperature: 0.7,
       topP: 1,
       topK: 1,
-      maxOutputTokens: 200,
+      maxOutputTokens: 500,
     },
   });
 
