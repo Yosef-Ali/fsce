@@ -14,7 +14,7 @@ const PostCard: FC<PostCardProps> = ({ post }) => {
         <a href={`/article/${post.slug}`}>{post.title}</a>
       </h2>
       <span className="text-sm text-muted-foreground">
-        By {post.author}, {post.date}
+        By {post.author.name}, {post._creationTime}
       </span>
       <p className="leading-7 [&:not(:first-child)]:mt-6">
         {post.excerpt}
