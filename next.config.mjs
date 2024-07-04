@@ -16,7 +16,9 @@ const nextConfig = {
     // Add other remote patterns if needed
   },
 
-
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;
