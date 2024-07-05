@@ -49,12 +49,7 @@ export default function AddPost() {
               <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
                 Add New Post
               </h1>
-              {/* <div className="hidden items-center gap-2 md:ml-auto md:flex">
-                <Button variant="outline" size="sm" onClick={() => handleStatusChange('draft')}>
-                  Draft
-                </Button>
-                <Button size="sm" onClick={handleSave}>Save Post</Button>
-              </div> */}
+
             </div>
             <div className="grid gap-4 lg:grid-cols-3 md:gap-8">
               <div className="grid auto-rows-max items-start gap-4 lg:col-span-1 lg:order-2">
@@ -67,14 +62,7 @@ export default function AddPost() {
                   postStatus={status}
                 />
               </div>
-
             </div>
-            {/* <div className="flex items-center justify-center gap-2 md:hidden">
-              <Button variant="outline" size="sm" onClick={() => handleStatusChange('draft')}>
-                Draft
-              </Button>
-              <Button size="sm" onClick={handleSave}>Save Post</Button>
-            </div> */}
           </div>
         </main>
       </div>
