@@ -1,9 +1,6 @@
-import { Button } from '@/components/ui/button';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Grid, PlusCircle, Upload } from 'lucide-react';
-import { CldImage, CldUploadButton, CloudinaryUploadWidgetResults, CloudinaryUploadWidgetInfo } from 'next-cloudinary';
-import { useState } from "react";
 import UploadButton from './upload-button';
 import cloudinary from "cloudinary"
 import CloudinaryImage from './cloudinary-image';
@@ -11,15 +8,12 @@ import FavoritesList from './favorites-list';
 import { ForceRefresh } from './force-refresh';
 import GalleryGrid from './gallery-grid';
 
-export type SearchResult = {
-  public_id: string;
-  tags: string[];
-};
+import { SearchResult } from '@/types'; // Import the shared type
+
 
 export default async function Media() {
   let results: { resources: SearchResult[] } = { resources: [] };
   let results_favorites: { resources: SearchResult[] } = { resources: [] };
-
 
   try {
     results = (await cloudinary.v2.search
