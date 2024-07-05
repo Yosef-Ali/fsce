@@ -1,3 +1,6 @@
+"use client"
+import React from "react"
+import { usePathname } from "next/navigation"
 import { BookOpenIcon, CircleUser, Home, ImageIcon, LineChart, Menu, Package, Package2, Search, Settings, ShoppingCart, TagIcon, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -6,9 +9,24 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
 import { UsersIcon } from "../icons"
-import { UserButton } from "@clerk/nextjs"
+import { UserButton, useUser } from "@clerk/nextjs"
+import { cn } from "@/lib/utils"
+import { api } from "../../../convex/_generated/api"
+import { useQuery } from "convex/react"
 
 const Header: React.FC = () => {
+  const pathname = usePathname()
+  const { user } = useUser()
+  const blogCount = useQuery(api.posts.getBlogCount, { userId: user?.id ?? "" })
+
+  const isLinkActive = (href: string) => {
+    return pathname.startsWith(href)
+  }
+
+  const linkClass = (href: string) => cn(
+    "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
+    isLinkActive(href) ? "bg-muted text-primary" : "text-muted-foreground"
+  )
 
   return (
     <header className="fixed top-0 left-0 md:left-[220px] lg:left-[280px] z-30 flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6 md:w-[calc(100%-220px)] lg:w-[calc(100%-280px)] ">
@@ -31,40 +49,34 @@ const Header: React.FC = () => {
             >
               <img src="/logo.svg" alt="logo" className="h-8" />
             </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-            >
-              <Home className="h-4 w-4" />
-              Dashboard
-            </Link>
+
             <Link
               href="/dashboard/blogs"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              className={linkClass("/dashboard/blogs")}
             >
               <BookOpenIcon className="h-4 w-4" />
               Blogs
-              <Badge variant="outline" className="ml-auto">6</Badge>
-
+              <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                {blogCount ?? "-"}
+              </Badge>
             </Link>
             <Link
               href="/dashboard/categories"
-              className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
+              className={linkClass("/dashboard/categories")}
             >
               <TagIcon className="h-4 w-4" />
               Categories
             </Link>
-
             <Link
               href="/dashboard/users"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              className={linkClass("/dashboard/users")}
             >
               <UsersIcon className="h-4 w-4" />
               Users
             </Link>
             <Link
               href="/dashboard/media"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+              className={linkClass("/dashboard/media")}
             >
               <ImageIcon className="h-4 w-4" />
               Media
@@ -72,8 +84,8 @@ const Header: React.FC = () => {
           </nav>
           <div className="mt-auto">
             <Link
-              href=""
-              className="flex items-center gap-3 rounded-lg px-3 text-muted-foreground transition-all hover:text-primary"
+              href="/dashboard/settings"
+              className={linkClass("/dashboard/settings")}
             >
               <Settings className="h-4 w-4" />
               Settings

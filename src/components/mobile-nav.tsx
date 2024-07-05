@@ -1,5 +1,6 @@
 import * as React from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 import { MainNavItem } from "@/types"
 import { siteConfig } from "@/config/site"
@@ -13,6 +14,10 @@ interface MobileNavProps {
 }
 
 export function MobileNav({ items, children }: MobileNavProps) {
+  const pathname = usePathname()
+
+  console.log("pathname", pathname)
+
   return (
     <div
       className={cn(
@@ -21,7 +26,6 @@ export function MobileNav({ items, children }: MobileNavProps) {
     >
       <div className="relative z-20 grid gap-6 rounded-md bg-popover p-4 text-popover-foreground shadow-md">
         <Link href="/" className="flex items-center space-x-2">
-          {/* <Icons.logo /> */}
           <Logo />
           <span className="font-bold">{siteConfig.name}</span>
         </Link>
@@ -32,7 +36,8 @@ export function MobileNav({ items, children }: MobileNavProps) {
               href={item.disabled ? "#" : item.href}
               className={cn(
                 "flex w-full items-center rounded-md p-2 text-sm font-medium hover:underline",
-                item.disabled && "cursor-not-allowed opacity-60"
+                item.disabled && "cursor-not-allowed opacity-60",
+                pathname === item.href && "bg-accent text-accent-foreground"
               )}
             >
               {item.title}
