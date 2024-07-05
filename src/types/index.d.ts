@@ -113,6 +113,7 @@ export type UserStatus = "active" | "inactive";
 
 export interface SearchResult {
   public_id: string;
-  tags: string[]; // Add the tags property
+  tags: string[];
+  format: string; // Add the format property
   // Add any other properties that should be part of SearchResult
 }

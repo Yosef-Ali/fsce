@@ -22,8 +22,8 @@ interface CloudinaryImageProps {
   width: number;
   height: number;
   alt: string;
-  onUnfavorited: () => void;
   path: string;
+  onUnfavorited: () => void;
 }
 
 export default function CloudinaryImage({
@@ -31,8 +31,8 @@ export default function CloudinaryImage({
   width,
   height,
   alt,
-  onUnfavorited,
-  path
+  path,
+  onUnfavorited
 }: CloudinaryImageProps) {
   const router = useRouter();
 

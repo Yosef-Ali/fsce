@@ -1,17 +1,16 @@
 "use client";
 
-import { SearchResult } from "./page";
+import { SearchResult } from '@/types';
 import { ReactNode } from "react";
+
+interface ImageGridProps {
+  images: SearchResult[];
+  getImage: (imageData: SearchResult) => ReactNode;
+}
 
 const MAX_COLUMNS = 4;
 
-export function ImageGrid({
-  images,
-  getImage,
-}: {
-  images: SearchResult[];
-  getImage: (imageData: SearchResult) => ReactNode;
-}) {
+export function ImageGrid({ images, getImage }: ImageGridProps) {
   function getColumns(colIndex: number) {
     return images.filter((resource, idx) => idx % MAX_COLUMNS === colIndex);
   }
