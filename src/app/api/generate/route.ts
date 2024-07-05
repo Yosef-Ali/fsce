@@ -166,7 +166,7 @@ import { StreamingTextResponse } from 'ai';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
-export const runtime = 'edge';
+// export const runtime = 'edge';
 
 export async function POST(req: Request): Promise<Response> {
   if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === '') {
