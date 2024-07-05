@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge"
 import IsAdminsOnly from "./is-admin"
 import NotificationsComponent from "./notifications"
 import { api } from "../../../convex/_generated/api"
+import Logo from "../logo"
 
 const Aside: React.FC = () => {
   const pathname = usePathname()
@@ -36,7 +37,8 @@ const Aside: React.FC = () => {
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
-              <img src="/logo.svg" alt="logo" className="h-8" />
+              {/* <img src="/logo.svg" alt="logo" className="h-8" /> */}
+              <Logo size={0.5} />
             </Link>
             <div className="relative ml-auto h-8 w-8">
               <NotificationsComponent />
