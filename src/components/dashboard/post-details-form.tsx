@@ -185,14 +185,31 @@ export const PostDetailsForm: React.FC<PostDetailsFormProps> = ({ onImageUrlChan
 
   useEffect(() => {
     if (content) {
-      const cleanedContent = JSON.stringify(content).replace(/<[^>]*>?/gm, '').replace(/[^\w\s.]/g, '');
-      const words = cleanedContent.split(' ');
-      let excerpt = words.slice(0, 15).join(' ');
-      if (excerpt.charAt(excerpt.length - 1) !== '.') {
-        excerpt = excerpt.slice(0, excerpt.lastIndexOf(' '));
+      let plainText = '';
+      const extractText = (node: JSONContent) => {
+        if (typeof node.text === 'string') {
+          plainText += node.text + ' ';
+        }
+        if (Array.isArray(node.content)) {
+          node.content.forEach(extractText);
+        }
+      };
+
+      extractText(content);
+
+      plainText = plainText.trim();
+      const words = plainText.split(/\s+/);
+      let excerpt = words.slice(0, 30).join(' ');
+
+      if (words.length > 30) {
+        excerpt += '...';
       }
 
-      form.setValue("excerpt", excerpt);
+      if (excerpt) {
+        form.setValue("excerpt", excerpt);
+      } else {
+        form.setValue("excerpt", "Enter your excerpt here...");
+      }
     }
   }, [content, form]);
 
@@ -250,9 +267,19 @@ export const PostDetailsForm: React.FC<PostDetailsFormProps> = ({ onImageUrlChan
                 <FormItem className="mb-4">
                   <FormLabel>Excerpt</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Excerpt" {...field} />
+                    <Textarea
+                      placeholder="Enter your excerpt here..."
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        form.setValue("excerpt", e.target.value);
+                      }}
+                    />
                   </FormControl>
-                  <FormDescription>This is your post excerpt.</FormDescription>
+                  <FormDescription>
+                    This is your post excerpt. It's automatically generated from your content,
+                    but you can edit it to customize how your post appears in summaries.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

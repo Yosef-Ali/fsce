@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { mutation, query, QueryCtx, MutationCtx } from "./_generated/server";
 import { ConvexError } from "convex/values";
 import { stat } from "fs";
+import { paginationOptsValidator } from "convex/server";
 
 
 // Helper function to get authenticated user
@@ -123,34 +124,29 @@ export const getPost = query({
   },
 });
 
+
 export const listPosts = query({
   args: {
     status: v.optional(v.union(v.literal("draft"), v.literal("published"), v.literal("archived"))),
     category: v.optional(v.string()),
-    limit: v.optional(v.number()),
-    cursor: v.optional(v.id("posts")),
+    paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
+    const { status, category, paginationOpts } = args;
+
     let postsQuery = ctx.db
       .query("posts")
-      .order("desc")
+      .order("desc");
 
-    if (args.status) {
-      postsQuery = postsQuery.filter(q => q.eq(q.field("status"), args.status));
+    if (status) {
+      postsQuery = postsQuery.filter(q => q.eq(q.field("status"), status));
     }
 
-    if (args.category) {
-      postsQuery = postsQuery.filter(q => q.eq(q.field("category"), args.category));
+    if (category) {
+      postsQuery = postsQuery.filter(q => q.eq(q.field("category"), category));
     }
 
-    if (args.cursor) {
-      postsQuery = postsQuery.filter(q => q.gt(q.field("_id"), args.cursor || 10));
-    }
-
-    const posts = await postsQuery.take(args.limit ?? 10);
-    const nextCursor = posts.length > 0 ? posts[posts.length - 1]._id : null;
-
-    return { posts, nextCursor };
+    return await postsQuery.paginate(paginationOpts);
   },
 });
 

@@ -7,32 +7,37 @@ import { api } from '../../../../convex/_generated/api';
 import { Id } from '../../../../convex/_generated/dataModel';
 
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CirclePlusIcon, FileIcon, ListFilterIcon } from "lucide-react";
+import { CirclePlusIcon, FileIcon } from "lucide-react";
 import PostTable from '@/components/dashboard/posts-table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
-const POSTS_PER_PAGE = 5;
+const POSTS_PER_PAGE = 10;
 
 export default function Blogs() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"all" | "draft" | "published" | "archived">("all");
   const [category, setCategory] = useState<string | undefined>(undefined);
-  const [currentCursor, setCurrentCursor] = useState<Id<"posts"> | undefined>(undefined);
+  const [cursors, setCursors] = useState<(string | null)[]>([null]);
+
+  const [currentPage, setCurrentPage] = useState(0);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [postToDelete, setPostToDelete] = useState<Id<"posts"> | null>(null);
 
   const queryArgs = {
     status: activeTab !== "all" ? activeTab : undefined,
     category,
-    limit: POSTS_PER_PAGE,
-    cursor: currentCursor,
+    paginationOpts: {
+      numItems: POSTS_PER_PAGE,
+      cursor: cursors[currentPage],
+    },
   };
 
   const query = useQuery(api.posts.listPosts, queryArgs);
+
   const isLoading = query === undefined;
-  const { posts, nextCursor } = query || { posts: [], nextCursor: null };
+  const posts = query?.page ?? [];
+  const nextCursor = query?.continueCursor;
 
   const deletePost = useMutation(api.posts.deletePost);
 
@@ -41,12 +46,11 @@ export default function Blogs() {
   };
 
   const handleEditPost = (slug: string) => {
-    const post = posts.find((p: { slug: string }) => p.slug === slug);
+    const post = posts.find((p) => p.slug === slug);
     if (post) {
       router.push(`/dashboard/blogs/edit-post/${post.slug}`);
     }
   };
-
 
   const handleDeletePost = (id: Id<"posts">) => {
     setPostToDelete(id);
@@ -66,13 +70,18 @@ export default function Blogs() {
   };
 
   const handleNextPage = () => {
-    if (nextCursor) {
-      setCurrentCursor(nextCursor);
+    if (nextCursor && currentPage === cursors.length - 1) {
+      setCursors([...cursors, nextCursor]);
+      setCurrentPage(currentPage + 1);
+    } else if (currentPage < cursors.length - 1) {
+      setCurrentPage(currentPage + 1);
     }
   };
 
   const handlePreviousPage = () => {
-    setCurrentCursor(undefined);
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
   };
 
   const renderPostTable = (tabValue: string) => (
@@ -83,8 +92,8 @@ export default function Blogs() {
       handleDeletePost={handleDeletePost}
       handleNextPage={handleNextPage}
       handlePreviousPage={handlePreviousPage}
-      hasNextPage={!!nextCursor}
-      hasPreviousPage={!!currentCursor}
+      hasNextPage={!!nextCursor || currentPage < cursors.length - 1}
+      hasPreviousPage={currentPage > 0}
     />
   );
 
@@ -92,7 +101,8 @@ export default function Blogs() {
     <main className="grid flex-1 items-start gap-4 px-4 sm:px-6 py-24 md:gap-8">
       <Tabs defaultValue="all" onValueChange={(value) => {
         setActiveTab(value as "all" | "draft" | "published" | "archived");
-        setCurrentCursor(undefined);
+        setCursors([null]);
+        setCurrentPage(0);
       }}>
         <div className="flex items-center">
           <TabsList>
@@ -102,22 +112,7 @@ export default function Blogs() {
             <TabsTrigger className="hidden sm:flex" value="archived">Archived</TabsTrigger>
           </TabsList>
           <div className="ml-auto flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="h-8 gap-1" size="sm" variant="outline">
-                  <ListFilterIcon className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Filter</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Filter by Category</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem checked={category === undefined} onClick={() => setCategory(undefined)}>
-                  All Categories
-                </DropdownMenuCheckboxItem>
-                {/* Add more category options here */}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* <FilterDropdown /> */}
             <Button className="h-8 gap-1" size="sm" variant="outline">
               <FileIcon className="h-3.5 w-3.5" />
               <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
