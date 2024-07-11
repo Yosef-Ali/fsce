@@ -14,7 +14,7 @@ const Categories = () => {
         <p>Loading categories...</p>
       ) : (
         <ul className="divide-y divide-gray-200">
-          {categories.map((category: { name: string; postCount: number }, index) => (
+          {categories.map((category: { name: string; postCount: number }, index: number) => (
             <li key={index} className="flex">
               <a href={`/category/${category.name.toLowerCase()}`} className="leading-7 [&:not(:first-child)]:mt-6 py-2 block flex-1">
                 {category.name}
