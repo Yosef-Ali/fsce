@@ -60,6 +60,7 @@ export default function AddPost() {
                 <PostDetailsForm
                   onImageUrlChange={handleImageUrlChange}
                   postStatus={status}
+                  mode="add"
                 />
               </div>
             </div>

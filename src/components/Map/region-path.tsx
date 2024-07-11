@@ -1,6 +1,5 @@
-
-
 import React from 'react';
+import { motion, Variants } from 'framer-motion';
 import { Region } from './regions';
 import './RegionPath.css';
 
@@ -8,20 +7,26 @@ interface RegionPathProps {
   region: Region;
   setHoveredRegion: (region: Region | null) => void;
   hoveredRegion: Region | null;
+  variants: Variants;
+  custom: number;
+  initial: string;
+  animate: any;
 }
-
-
 
 const RegionPath: React.FC<RegionPathProps> = ({
   region,
   setHoveredRegion,
   hoveredRegion,
+  variants,
+  custom,
+  initial,
+  animate,
 }) => {
   const [tooltipVisible, setTooltipVisible] = React.useState(false);
 
   return (
-    <svg role="img">
-      <path
+    <motion.svg role="img" initial={initial} animate={animate} variants={variants} custom={custom}>
+      <motion.path
         {...region}
         fill={hoveredRegion === region ? region.hoverFillColor : region.fillColor}
         stroke={region.strokeColor}
@@ -36,10 +41,9 @@ const RegionPath: React.FC<RegionPathProps> = ({
         }}
         className="region-path"
       >
-        <title data-tooltip >{region.tooltiptext}</title>
-      </path>
-
-    </svg>
+        <title>{region.tooltiptext}</title>
+      </motion.path>
+    </motion.svg>
   );
 };
 

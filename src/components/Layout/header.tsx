@@ -6,9 +6,6 @@ import Link from "next/link";
 import Logo from '../logo';
 import { usePathname } from 'next/navigation';
 import { ModeToggle } from '@/app/mode-toggle';
-import Image from 'next/image';
-import { useQuery } from 'convex/react';
-import { api } from '../../../convex/_generated/api';
 import Authenticated from '../authenticated';
 
 interface LinkProps {
@@ -37,9 +34,8 @@ export const Header: React.FC = () => {
   const isDashboard = pathname === "/dashboard/blogs";
 
   const navigationItems = [
-    { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
-    { href: "/programs", label: "Programs" },
+    { href: "/", label: "Who we are" },
+    { href: "/programs", label: "What we do" },
     { href: "/news-and-events", label: "News & Events" },
     { href: "/contact", label: "Contact" },
   ];

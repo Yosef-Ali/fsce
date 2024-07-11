@@ -1,16 +1,29 @@
-"use client"
-import * as React from "react"
+import React, { useEffect } from "react";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
-import { Card, CardContent } from "@/components/ui/card"
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
+const responsive = {
+  superLargeDesktop: {
+    breakpoint: { max: 4000, min: 3000 },
+    items: 1
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 1
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 1
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1
+  }
+};
 
 export default function CarouselSection() {
+
+
   const imageList = [
     "/images/hero-img-1.webp",
     "/images/hero-img-2.webp",
@@ -27,36 +40,39 @@ export default function CarouselSection() {
     { h1: 'Community Development', h3: 'Developing communities through sustainable development programs.' },
   ];
 
-  const imagePath = "/images/hero - image -";
-
   return (
-    <Carousel className="w-full max-w-5xl max-h-[450px]">
-      <CarouselContent>
+    <div className="w-full">
+      <Carousel
+        responsive={responsive}
+        infinite={true}
+        autoPlay={true}
+        autoPlaySpeed={5000}
+        className="w-full"
+        containerClass="carousel-container"
+        itemClass="carousel-item-padding-40-px"
+      >
         {imageList.map((imagePath, index) => (
-          <CarouselItem key={index}>
-            <div className="relative">
-              <img
-                src={imagePath}
-                alt={`carousel-image-${index}`}
-                className="w-full h-full rounded"
-              />
-              <div
-                className="absolute bottom-0 left-0 p-8 text-white  animate-fadeIn duration-500 delay-200"
-                style={{ bottom: 0, left: 0 }} // Add this style
-              >
-                <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1] text-balance">
-                  {slideContent[index].h1}
-                </h1>
-                <p className="max-w-[750px] text-lg font-light text-muted shadow">
-                  {slideContent[index].h3}
-                </p>
-              </div>
+          <div key={index} className="relative w-full h-[600px]">
+            <img
+              src={imagePath}
+              alt={`carousel-image-${index}`}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-blue-500 bg-opacity-40"></div>
+            <div
+              className="absolute bottom-0 left-0 p-8 text-white animate-fadeIn duration-500 delay-200"
+              style={{ bottom: 0, left: 350 }}
+            >
+              <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1] text-balance">
+                {slideContent[index].h1}
+              </h1>
+              <p className="max-w-[750px] text-lg font-light text-muted shadow">
+                {slideContent[index].h3}
+              </p>
             </div>
-          </CarouselItem>
+          </div>
         ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
-  )
+      </Carousel>
+    </div>
+  );
 }

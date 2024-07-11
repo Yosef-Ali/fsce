@@ -201,3 +201,97 @@ export const getBlogCount = query({
     return count;
   },
 });
+
+// filter by category
+
+
+export const getAbout = query({
+  handler: async (ctx) => {
+    // filter by category
+    const about = await ctx.db
+      .query("posts")
+      .filter(q => q.eq(q.field("category"), "About"))
+      .filter(q => q.eq(q.field("status"), "published"))
+      .collect();
+    console.log(about);
+    return about;
+  },
+});
+
+
+export const getPrograms = query({
+  handler: async (ctx) => {
+    // filter by category
+    const programs = await ctx.db
+      .query("posts")
+      .filter(q => q.eq(q.field("category"), "Programs"))
+      .filter(q => q.eq(q.field("status"), "published"))
+      .collect();
+    console.log(programs);
+    return programs;
+  },
+});
+
+
+export const getNews = query({
+  handler: async (ctx) => {
+    // filter by category
+    const news = await ctx.db
+      .query("posts")
+      .filter(q => q.eq(q.field("category"), "News"))
+      .filter(q => q.eq(q.field("status"), "published"))
+      .order("desc")
+      .collect();
+    console.log(news);
+    return news;
+  },
+});
+
+export const getEvents = query({
+  handler: async (ctx) => {
+    // filter by category
+    const events = await ctx.db
+
+      .query("posts")
+      .filter(q => q.eq(q.field("category"), "Events"))
+      .filter(q => q.eq(q.field("status"), "published"))
+      .order("desc")
+      .collect()
+
+    console.log(events);
+    return events;
+  },
+});
+
+
+export const getRecentPosts = query({
+  args: {},
+  handler: async (ctx, args) => {
+    const posts = await ctx.db
+      .query('posts')
+      .filter(q => q.eq(q.field("status"), "published"))
+      .filter(q => q.eq(q.field("category"), "News" || "Events"))
+      .order("desc")
+      .take(8)
+    return posts;
+  },
+});
+
+export const getCategories = query({
+  args: {},
+  handler: async (ctx) => {
+    const posts = await ctx.db.query('posts').collect();
+
+    const categoryCounts = posts.reduce((acc, post) => {
+      if (post.category) {
+        acc[post.category] = (acc[post.category] || 0) + 1;
+      }
+      return acc;
+    }, {} as Record<string, number>);
+
+    return Object.entries(categoryCounts).map(([name, postCount]) => ({
+      name,
+      postCount
+    }));
+  },
+});

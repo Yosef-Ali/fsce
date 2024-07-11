@@ -85,6 +85,7 @@ export default function EditPost({ params }: { params: { slug: string } }) {
                     onImageUrlChange={handleImageUrlChange}
                     postStatus={status}
                     post={formattedPost}
+                    mode="edit"
                   />
                 ) : (
                   <div>Loading post data...</div>

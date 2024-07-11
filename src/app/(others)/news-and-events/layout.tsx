@@ -13,6 +13,7 @@ export default function NewsAndEventsLayout({
         <div className="max-w-5xl mx-auto pt-8 pb-8">
           <div className="flex flex-wrap -mx-2">
             {/* Add your specific content or components for the Programs section here */}
+            <div className="w-full px-2 text-5xl text-center font-semibold">News and Events</div>
           </div>
         </div>
       </div>

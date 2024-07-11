@@ -2,12 +2,12 @@ import { CarouselItem, CarouselContent, CarouselPrevious, CarouselNext, Carousel
 
 export default function Partners() {
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32">
+    <section className="w-full py-12 md:py-24 lg:py-32 bg-slate-50">
       <div className="container mx-auto grid gap-4 px-4 py-8 text-center md:px-6 lg:gap-10">
         <div className="space-y-3">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Our Partners</h2>
           <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-            {`We&apos;re proud to work with these amazing organizations.`}
+            {`We are proud to work with these amazing organizations.`}
           </p>
         </div>
         <div className="w-full">

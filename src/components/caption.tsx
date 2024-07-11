@@ -24,16 +24,16 @@ const Captions: React.FC<CaptionsProps> = ({ data, region }) => {
   // When there's data and apo is not empty, show the title and apo
   return (
     <div className="flex items-start gap-4">
-      <Avatar className="hidden h-10 w-10 sm:flex rounded-full bg-muted p-1">
+      <Avatar className="hidden h-14 w-14 sm:flex rounded-full bg-muted p-3">
         <AvatarImage src="/logo.svg" alt="Avatar" />
         <AvatarFallback>FS</AvatarFallback>
       </Avatar>
       <div className="flex flex-col gap-1">
-        <p className="text-lg font-medium leading-none">
+        <p className="text-lg font-medium leading-none text-left">
           {hoveredRegionData.title}
         </p>
-        <p>{hoveredRegionData.apo}</p>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-left">{hoveredRegionData.apo}</p>
+        <p className="text-sm text-muted-foreground text-left">
           {hoveredRegionData.dis}
         </p>
       </div>

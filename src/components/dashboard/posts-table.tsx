@@ -155,9 +155,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { MoreHorizontal } from 'lucide-react';
-import { Id } from '../../../../convex/_generated/dataModel';
+
 import SkeletonRow from './skeleton-row';
 import { formatDate } from '@/util/dateUtils';
+import { Id } from '../../../convex/_generated/dataModel';
 
 interface Post {
   _id: Id<"posts">;

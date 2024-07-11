@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useMemo, useEffect } from "react";
+import { motion, useAnimation, Variants } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 import { regions, Region } from "./Map/regions";
 import RegionPath from "./Map/region-path";
 import Captions from "./caption";
@@ -82,33 +83,74 @@ const data = [
 const MapComponent: React.FC = () => {
   const [hoveredRegion, setHoveredRegion] = useState<Region | null>(null);
   const memoizedRegions = useMemo(() => regions, []);
+
+  const controls = useAnimation();
+  const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.1 });
+
+  useEffect(() => {
+    if (inView) {
+      controls.start('visible');
+    } else {
+      controls.start('hidden');
+    }
+  }, [controls, inView]);
+
+  const sectionVariants: Variants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
+  const regionVariants: Variants = {
+    hidden: { opacity: 0, pathLength: 0 },
+    visible: (delay: number) => ({
+      opacity: 1,
+      pathLength: 1,
+      transition: { duration: 0.8, delay },
+    }),
+  };
+
   return (
-    <>
-      <section className="w-full">
-        <div className="container mx-auto grid gap-4 px-4 py-8 md:px-6 lg:gap-10">
-          <div className="space-y-3">
-            <h2 className="text-xl font-bold tracking-tighter sm:text-3xl md:text-5xl">Graphic Intervention Areas</h2>
-            <p>Protecting children&apos;s rights, rehabilitating vulnerable children, combating harmful practices, and empowering youth through community engagement across Ethiopia.</p>
-            <h4 className="text-xl font-bold tracking-tighter sm:text-1xl md:text-2xl text-gray-500">2023</h4>
-            <div className="flex flex-col items-center justify-center gap-4">
-              <svg className="default-svg w-full h-full py-4 z-0" preserveAspectRatio="xMidYMid meet" viewBox="0 0 800 600">
-                {memoizedRegions.map((region) => (
-                  <RegionPath
-                    key={region.id}
-                    region={region}
-                    hoveredRegion={hoveredRegion}
-                    setHoveredRegion={setHoveredRegion}
-                  />
-                ))}
-              </svg>
-              <div className="w-full">
-                <Captions data={data} region={hoveredRegion} />
-              </div>
-            </div>
+    <motion.section
+      ref={ref}
+      initial="hidden"
+      animate={controls}
+      variants={sectionVariants}
+      className="max-w-3xl mx-auto py-16"
+    >
+      <div className="container mx-auto lg:gap-10 ">
+        <motion.div className="space-y-4 text-center">
+          <motion.h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Graphic Intervention Areas</motion.h2>
+          <motion.p className="mx-auto max-w-[700px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">Protecting children&apos;s rights, rehabilitating vulnerable children, combating harmful practices, and empowering youth through community engagement across Ethiopia.</motion.p>
+          <motion.h4 className="text-xl font-bold tracking-tighter sm:text-1xl md:text-2xl text-gray-500">2023</motion.h4>
+          <div className="flex flex-col items-center justify-center gap-4">
+            <motion.svg
+              className="default-svg w-full h-full py-4 z-0"
+              preserveAspectRatio="xMidYMid meet"
+              viewBox="0 0 800 600"
+            >
+              {memoizedRegions.map((region, index) => (
+                <RegionPath
+                  key={region.id}
+                  region={region}
+                  hoveredRegion={hoveredRegion}
+                  setHoveredRegion={setHoveredRegion}
+                  variants={regionVariants}
+                  custom={index * 0.2}
+                  initial="hidden"
+                  animate={controls}
+                />
+              ))}
+            </motion.svg>
+            <motion.div
+              className="w-full min-h-[100px] mt-4"
+              variants={sectionVariants}
+            >
+              <Captions data={data} region={hoveredRegion} />
+            </motion.div>
           </div>
-        </div>
-      </section>
-    </>
+        </motion.div>
+      </div>
+    </motion.section>
   );
 };
 
