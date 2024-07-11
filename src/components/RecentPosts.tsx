@@ -3,6 +3,8 @@ import React from 'react';
 import { api } from '../../convex/_generated/api';
 import { useQuery } from 'convex/react';
 
+
+
 const formatDate = (timestamp: number): string => {
   const date = new Date(timestamp);
   return date.toLocaleDateString('en-US', {
@@ -23,7 +25,7 @@ const RecentPosts = () => {
     <div>
       <h2 className="scroll-m-20 text-xl font-semibold tracking-tight text-center mb-5">Recent Posts</h2>
       <ul>
-        {recentPosts.map((post) => (
+        {recentPosts.map((post: any) => (
           <li key={post._id} className="">
             <a href={`/article/${post.slug}`} className="flex">
               <div className="w-1/3">
