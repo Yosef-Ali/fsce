@@ -38,9 +38,12 @@ export default defineSchema({
     .index("by_status", ["status"])
     .index("by_category", ["category"])
     .index("by_author", ["author.id"])
-    .index("by_slug", ["slug"]),
-
-
+    .index("by_slug", ["slug"])
+    .searchIndex("search_content", {
+      searchField: "content",
+      filterFields: ["status"]
+    }),
+   
   notifications: defineTable({
     clerkId: v.string(),
     message: v.string(),

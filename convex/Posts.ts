@@ -66,19 +66,26 @@ export const updatePost = mutation({
       throw new ConvexError("Post not found");
     }
 
-    if (post.author.id !== identity.subject) {
-      const isAdmin = await ctx.db.query("users")
-        .filter(q => q.eq(q.field("_id"), identity.subject))
-        .filter(q => q.or(
-          q.eq(q.field("role"), "admin"),
-          q.eq(q.field("role"), "org:admin"),
-          q.eq(q.field("role"), "author")
-        ))
-        .unique();
+    const user = await ctx.db
+      .query("users")
+      .filter(q => q.eq(q.field("_id"), identity.subject))
+      .unique();
 
-      if (!isAdmin) {
-        throw new ConvexError("Unauthorized");
-      }
+    if (!user) {
+      throw new ConvexError("User not found");
+    }
+
+    const isAuthor = post.author.id === identity.subject;
+    const isAdminOrOrgAdmin = user.role === "admin" || user.role === "org:admin";
+
+    console.log("Is author:", isAuthor);
+    console.log("Is admin or org admin:", isAdminOrOrgAdmin);
+    console.log("User role:", user.role);
+    console.log("Post author:", post.author);
+    console.log("User ID:", identity.subject);
+
+    if (!isAuthor && !isAdminOrOrgAdmin) {
+      throw new ConvexError("Unauthorized");
     }
 
     const updateArgs = { ...args, updatedAt: Date.now() };
@@ -293,5 +300,22 @@ export const getCategories = query({
       name,
       postCount
     }));
+  },
+});
+
+export const searchPosts = query({
+  args: { searchTerm: v.string() },
+  handler: async (ctx, args) => {
+    const { searchTerm } = args;
+
+    const posts = await ctx.db
+      .query("posts")
+      .withSearchIndex("search_content", (q) =>
+        q.search("content", searchTerm)
+      )
+      .filter((q) => q.eq(q.field("status"), "published"))
+      .take(20)
+
+    return posts;
   },
 });

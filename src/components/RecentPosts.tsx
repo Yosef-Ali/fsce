@@ -27,7 +27,7 @@ const RecentPosts = () => {
       <ul>
         {recentPosts.map((post: any) => (
           <li key={post._id} className="">
-            <a href={`/article/${post.slug}`} className="flex">
+            <a href={`/news-and-events/${post.slug}`} className="flex">
               <div className="w-1/3">
                 <img className="rounded" src={post.image || '/placeholder-image.jpg'} alt={post.title} />
               </div>
