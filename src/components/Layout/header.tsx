@@ -1,101 +1,119 @@
-"use client";
-import React, { useEffect, useState } from 'react';
-import { SignInButton, SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs";
-import { useSession } from "@clerk/nextjs";
-import Link from "next/link";
-import Logo from '../logo';
-import { usePathname } from 'next/navigation';
-import { ModeToggle } from '@/app/mode-toggle';
-import Authenticated from '../authenticated';
+"use client"
 
+import React, { useEffect, useState } from 'react'
+import { UserButton, useUser, useClerk } from "@clerk/nextjs"
+import Link from "next/link"
+import { usePathname } from 'next/navigation'
+import { Button } from "@/components/ui/button"
+import { Toaster } from "@/components/ui/toaster"
+import { useToast } from "@/components/ui/use-toast"
+import Logo from '../logo'
+import { ModeToggle } from '@/app/mode-toggle'
+import { useQuery } from "convex/react"
+import { api } from "../../../convex/_generated/api"
 interface LinkProps {
-  href: string;
-  children: React.ReactNode;
+  href: string
+  children: React.ReactNode
 }
 
 const ActiveLink: React.FC<LinkProps> = ({ href, children }) => {
-
-  const pathname = usePathname();
-  const isActive = pathname === href;
+  const pathname = usePathname()
+  const isActive = pathname === href
 
   return (
-    <Link href={href} legacyBehavior>
-      <a className="text-nowrap">
-        {children}
-      </a>
+    <Link href={href} className={`text-nowrap ${isActive ? 'font-bold' : ''}`}>
+      {children}
     </Link>
-  );
-};
+  )
+}
 
 export const Header: React.FC = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const pathname = usePathname();
-  const { isSignedIn } = useSession();
-  const isDashboard = pathname === "/dashboard/blogs";
+  const [isScrolled, setIsScrolled] = useState(false)
+  const { isSignedIn, isLoaded, user } = useUser()
+  const { signOut } = useClerk()
+  const { toast } = useToast()
+
+  const hasAccessToDashboard = useQuery(
+    api.users.checkAccess,
+    isLoaded && user?.id ? { clerkId: user.id } : "skip"
+  )
 
   const navigationItems = [
     { href: "/", label: "Who we are" },
     { href: "/programs", label: "What we do" },
     { href: "/news-and-events", label: "News & Events" },
     { href: "/contact", label: "Contact" },
-  ];
+  ]
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0); // Update state on scroll
-    };
+      setIsScrolled(window.scrollY > 0)
+    }
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
-    // Cleanup function to remove listener on unmount
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  useEffect(() => {
+    if (isLoaded && isSignedIn && hasAccessToDashboard && hasAccessToDashboard.hasAccess === false) {
+      toast({
+        title: "You do not have access to this dashboard",
+        description: "Please contact the administrator to request access.",
+        variant: "destructive",
+        duration: 5000,
+      })
+    }
+  }, [isLoaded, isSignedIn, hasAccessToDashboard, toast])
 
+  const handleSignIn = () => {
+    toast({
+      title: "Internal Use Only",
+      description: "Sign-in is restricted to authorized personnel. If you need access, please contact the administrator.",
+      duration: 5000,
+    })
+  }
 
   return (
     <>
-      <div className={`w-full left-0 right-0 z-50 sticky top-0 ${isScrolled ? 'bg-white bg-opacity-75 backdrop-blur-sm' : 'bg-transparent backdrop-blur-none'}`}>
-        {/* Rest of your header content */}
-        <div
-          className="header flex items-center justify-between max-w-5xl mx-auto"
-        >
-          <div
-            className="px-2 w-full overflow-hidden md:w-1/6 lg:w-1/4 xl:w-1/4 text-center md:text-left cursor-pointer"
-          >
-            <Link href="/" legacyBehavior>
-              <Logo />
-            </Link>
-          </div>
-          <nav className="nav ">
-            <ul className="flex items-center">
+      <header className={`w-full left-0 right-0 z-50 sticky top-0 ${isScrolled ? 'bg-background/80 backdrop-blur-sm' : 'bg-background'} shadow-sm`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex-shrink-0">
+              <Link href="/" aria-label="Home">
+                <Logo />
+              </Link>
+            </div>
+            <nav className="hidden md:flex space-x-8">
               {navigationItems.map((item) => (
-                <li
-                  key={item.href}
-                  className="py-8 px-4 border-b border-gray-300 border-opacity-0 hover:border-opacity-100 hover:text-gray-500 duration-200 cursor-pointer"
-                >
-                  <ActiveLink href={item.href}>{item.label}</ActiveLink>
-                </li>
+                <ActiveLink key={item.href} href={item.href}>
+                  {item.label}
+                </ActiveLink>
               ))}
-              <Authenticated>
-                <li
-                  className="py-8 px-4 border-b border-gray-300 border-opacity-0 hover:border-opacity-100 hover:text-gray-500 duration-200 cursor-pointer"
-                >
-                  <ActiveLink href="/dashboard/blogs">Dashboard</ActiveLink>
-                </li>
-              </Authenticated>
-            </ul>
-          </nav>
-          <div
-            className="px-2 w-full overflow-hidden md:w-1/6 lg:w-1/4 xl:w-1/4 flex gap-4 items-center justify-end"
-          >
-            {isSignedIn ? <UserButton /> : <SignInButton />}
-            <ModeToggle />
+              {isLoaded && isSignedIn && hasAccessToDashboard?.hasAccess && (
+                <ActiveLink href="/dashboard">Dashboard</ActiveLink>
+              )}
+            </nav>
+            <div className="flex items-center space-x-4">
+              {!isLoaded ? (
+                <Button variant="ghost" disabled>Loading...</Button>
+              ) : isSignedIn ? (
+                <>
+                  {hasAccessToDashboard?.hasAccess ? (
+                    <Button variant="outline" onClick={() => signOut()}>Logout</Button>
+                  ) : (
+                    <Button variant="outline" onClick={() => signOut()}>Logout</Button>
+                  )}
+                  <UserButton afterSignOutUrl="/" />
+                </>
+              ) : (
+                <Button onClick={handleSignIn}>Sign In</Button>
+              )}
+              <ModeToggle />
+            </div>
           </div>
         </div>
-      </div>
+      </header>
+      <Toaster />
     </>
-  );
-};
-
-
-
+  )
+}
