@@ -1,20 +1,18 @@
+"use client";
+
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@clerk/nextjs';
 
-export default function BlogsPage() {
-  const { isLoaded, userId } = useAuth();
+export default function DashboardPage() {
   const router = useRouter();
+  const { isSignedIn } = useAuth();
 
   useEffect(() => {
-    if (isLoaded && userId) {
-      router.push('/dashboard/blogs');
+    if (!isSignedIn) {
+      router.push('/');
     }
-  }, [isLoaded, userId, router]);
+  }, [isSignedIn, router]);
 
-  return (
-    <div className="container max-w-5xl mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-4">Blogs</h1>
-    </div>
-  );
+  return null; // No JSX needed as the component only handles redirection
 }
