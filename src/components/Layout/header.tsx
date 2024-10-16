@@ -5,7 +5,6 @@ import Link from "next/link"
 import { usePathname } from 'next/navigation'
 import { UserButton, SignInButton, SignUpButton, useUser } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
 import Logo from '../logo'
 import { ModeToggle } from '@/app/mode-toggle'
 
@@ -19,15 +18,6 @@ const navigationItems = [
 export const Header: React.FC = () => {
   const pathname = usePathname()
   const { isSignedIn, isLoaded } = useUser()
-  const { toast } = useToast()
-
-  const handleInternalUseMessage = () => {
-    toast({
-      title: "Internal Use Only",
-      description: "Sign-in is restricted to authorized personnel. If you need access, please contact the administrator.",
-      duration: 5000,
-    })
-  }
 
   return (
     <header className="w-full bg-background shadow-sm sticky top-0 z-50">
@@ -63,7 +53,9 @@ export const Header: React.FC = () => {
                 <SignInButton mode="modal">
                   <Button variant="outline">Sign In</Button>
                 </SignInButton>
-                <Button onClick={handleInternalUseMessage}>Internal Use</Button>
+                <SignUpButton mode="modal">
+                  <Button variant="outline">Sign Up</Button>
+                </SignUpButton>
               </>
             )}
             <ModeToggle />
