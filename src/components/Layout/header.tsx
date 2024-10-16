@@ -43,7 +43,7 @@ export const Header: React.FC = () => {
               <Button variant="ghost" disabled>Loading...</Button>
             ) : isSignedIn ? (
               <>
-                <Link href="/dashboard">
+                <Link href="/dashboard/blogs">
                   <Button variant="outline">Dashboard</Button>
                 </Link>
                 <UserButton afterSignOutUrl="/" />
