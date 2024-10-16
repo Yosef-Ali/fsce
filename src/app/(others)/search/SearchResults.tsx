@@ -6,6 +6,15 @@ import Link from 'next/link';
 import { useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 
+// Define the type for a post
+interface Post {
+  _id: string;
+  slug: string;
+  title: string;
+  category: string;
+  excerpt: string;
+}
+
 const SearchResults = ({ searchTerm }: { searchTerm: string }) => {
   const searchResults = useQuery(api.posts.searchPosts, { searchTerm });
 
@@ -25,7 +34,7 @@ const SearchResults = ({ searchTerm }: { searchTerm: string }) => {
 
   return (
     <div className="grid gap-4">
-      {searchResults.map((post) => (
+      {(searchResults as Post[]).map((post: Post) => (
         <Link href={`/search/${post.slug}`} key={post._id}>
           <Card className="transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1">
             <CardHeader>
