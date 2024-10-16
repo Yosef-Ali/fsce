@@ -20,7 +20,7 @@ const SearchResultsPage = () => {
 
   return (
     <div className="container max-w-5xl mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-4">Search Results for "{searchTerm}"</h1>
+      <h1 className="text-2xl font-bold mb-4">Search Results for &quot;{searchTerm}&quot;</h1>
       {searchResults.length === 0 ? (
         <Card>
           <CardContent>
