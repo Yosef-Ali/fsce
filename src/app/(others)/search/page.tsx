@@ -21,7 +21,7 @@ const SearchResultsPage = () => {
   return (
     <div className="container max-w-5xl mx-auto py-8">
       <h1 className="text-2xl font-bold mb-4">Search Results for &quot;{searchTerm}&quot;</h1>
-      {searchResults.length === 0 ? (
+      {searchResults?.length === 0 ? (
         <Card>
           <CardContent>
             <p className="text-center py-4">No results found. Try a different search term.</p>
@@ -29,7 +29,7 @@ const SearchResultsPage = () => {
         </Card>
       ) : (
         <div className="grid gap-4">
-          {searchResults.map((post) => (
+          {searchResults?.map((post) => (
             <Link href={`/search/${post.slug}`} key={post._id}>
               <Card
                 key={post._id}
