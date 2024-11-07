@@ -24,6 +24,8 @@ export const getUserById = query({
       throw new ConvexError("User not found");
     }
 
+    console.log(user.tokenIdentifier); // Output tokenIdentifier by console logging
+
     return user;
   },
 });
@@ -35,17 +37,18 @@ export const createUser = internalMutation({
     name: v.string(),
     imageUrl: v.string(),
     clerkId: v.string(),
-    active: v.string(),
-    role: v.string(),
+    active: v.optional(v.union(v.literal("active"), v.literal("inactive"))),
+    role: v.optional(v.union(v.literal("user"), v.literal("author"), v.literal("admin"), v.literal("org:admin"))),
+    tokenIdentifier: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const existingUser = await ctx.db
       .query("users")
-      .filter((q) => q.eq(q.field("clerkId"), args.clerkId))
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", args.clerkId))
       .first();
 
     if (existingUser) {
-      throw new Error("User with this tokenIdentifier already exists");
+      throw new ConvexError("User with this clerkId already exists");
     }
 
     const userId = await ctx.db.insert("users", {
@@ -53,8 +56,9 @@ export const createUser = internalMutation({
       name: args.name,
       imageUrl: args.imageUrl,
       clerkId: args.clerkId,
-      active: "inactive",
-      role: "user",
+      active: args.active ?? "inactive",
+      role: args.role ?? "user",
+      ...(args.tokenIdentifier && { tokenIdentifier: args.tokenIdentifier }),
     });
 
     // Create notification after user creation
@@ -68,7 +72,6 @@ export const createUser = internalMutation({
     return userId;
   },
 });
-
 
 export const updateUserInternally = internalMutation({
   args: {

@@ -9,8 +9,11 @@ export default defineSchema({
     clerkId: v.string(),
     name: v.string(),
     active: v.union(v.literal("active"), v.literal("inactive")),
-    role: v.union(v.literal("author"), v.literal("user"), v.literal("admin"), v.literal("org:admin")),
-  }),
+    tokenIdentifier: v.optional(v.string()),
+    role: v.union(v.literal("user"), v.literal("author"), v.literal("admin"), v.literal("org:admin")),
+  })
+    .index("by_token", ["tokenIdentifier"])
+    .index("by_clerkId", ["clerkId"]),
 
   organizations: defineTable({
     organizationId: v.string(),
@@ -43,7 +46,7 @@ export default defineSchema({
       searchField: "content",
       filterFields: ["status"]
     }),
-   
+
   notifications: defineTable({
     clerkId: v.string(),
     message: v.string(),
@@ -52,10 +55,13 @@ export default defineSchema({
   }).index("by_clerkId", ["clerkId"])
     .index("by_read", ["read"]),
 
+  // In schema.ts
   categories: defineTable({
     title: v.string(),
     description: v.string(),
-  }).index("by_title", ["title"]),
+    slug: v.string() // Add missing field
+  })
+    .index("by_slug", ["slug"]),// Add index for slug field
 
   documents: defineTable({
     title: v.string(),

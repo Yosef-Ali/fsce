@@ -1,19 +1,18 @@
-import { ReactNode } from "react";
-import { Header } from "./header";
-import Footer from "./footer";
+import React from 'react'
 
-type Props = {
-  children: ReactNode;
-};
+import Footer from './footer'
+import { Header } from './header'
 
-const MainLayout = ({ children }: Props) => {
+
+
+export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Header />
-      {children}
+      <main className="flex-grow">
+        {children}
+      </main>
       <Footer />
-    </>
-  );
-};
-
-export default MainLayout;
+    </div>
+  )
+}

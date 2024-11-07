@@ -277,9 +277,12 @@ export const getRecentPosts = query({
     const posts = await ctx.db
       .query('posts')
       .filter(q => q.eq(q.field("status"), "published"))
-      .filter(q => q.eq(q.field("category"), "News" || "Events"))
+      .filter(q => q.or(
+        q.eq(q.field("category"), "News"),
+        q.eq(q.field("category"), "Events")
+      ))
       .order("desc")
-      .take(8)
+      .take(8);
     return posts;
   },
 });

@@ -11,10 +11,15 @@ export const create = mutation({
   args: {
     title: v.string(),
     description: v.string(),
+    slug: v.string(),
   },
   handler: async (ctx, args) => {
-    const { title, description } = args;
-    return await ctx.db.insert("categories", { title, description });
+    const { title, description, slug } = args;
+    return await ctx.db.insert("categories", {
+      title,
+      description,
+      slug
+    });
   },
 });
 
@@ -23,6 +28,7 @@ export const update = mutation({
     id: v.id("categories"),
     title: v.optional(v.string()),
     description: v.optional(v.string()),
+    slug: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const { id, ...fields } = args;

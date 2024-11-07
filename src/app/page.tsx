@@ -17,7 +17,7 @@ import MainLayout from '@/components/Layout/MainLayout';
 import Overview from '@/components/Overview';
 
 export default function AboutPage() {
-  const about = useQuery(api.posts.getAbout);
+  const about = useQuery(api.Posts.getAbout);
 
   console.log("Client: About data:", about);
 
