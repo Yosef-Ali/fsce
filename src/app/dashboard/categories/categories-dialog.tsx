@@ -16,7 +16,10 @@ export function CategoriesDialog({ open, onClose, onSubmit }: CategoriesDialogPr
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ title, description });
+    onSubmit({
+      title,
+      description
+    });
     setTitle("");
     setDescription("");
   };

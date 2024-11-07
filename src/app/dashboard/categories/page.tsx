@@ -1,4 +1,3 @@
-
 "use client";
 import { useQuery, useMutation } from "convex/react";
 
@@ -9,6 +8,18 @@ import { CategoriesDialog } from "./categories-dialog";
 import { Button } from "@/components/ui/button";
 import { CirclePlusIcon } from "lucide-react";
 
+const generateSlug = (title: string) => {
+  return title.toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-') // Replace any non-alphanumeric chars with hyphen
+    .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
+    .trim();
+};
+
+type CategoryFormData = {
+  title: string;
+  description: string;
+};
+
 export default function Categories() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const categories = useQuery(api.categories.list) || [];
@@ -17,8 +28,11 @@ export default function Categories() {
   const handleOpenDialog = () => setIsDialogOpen(true);
   const handleCloseDialog = () => setIsDialogOpen(false);
 
-  const handleCreateCategory = async (newCategory: { title: string; description: string }) => {
-    await createCategory(newCategory);
+  const handleCreateCategory = async (formData: CategoryFormData) => {
+    await createCategory({
+      ...formData,
+      slug: generateSlug(formData.title)
+    });
     handleCloseDialog();
   };
 
