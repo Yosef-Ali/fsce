@@ -226,6 +226,17 @@ export const getAbout = query({
 });
 
 
+export const getMerits = query({
+  handler: async (ctx) => {
+    const about = await ctx.db
+      .query("posts")
+      .filter(q => q.eq(q.field("category"), "Merits"))
+      .filter(q => q.eq(q.field("status"), "published"))
+      .collect();
+    return about;
+  },
+});
+
 export const getPrograms = query({
   handler: async (ctx) => {
     // filter by category

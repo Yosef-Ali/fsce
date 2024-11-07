@@ -3,29 +3,25 @@ import Article from './Article';
 import { Id } from '../../convex/_generated/dataModel';
 import { Separator } from './ui/separator';
 
-
-export type Post = {
-  _id: Id<"posts">;
-  _creationTime: number;
-  image?: string;
-  author: {
-    name: string;
-    image: string;
-    id: string;
-  };
-  title: string;
-  slug: string;
-  content: any;
-  excerpt: string;
-  status: "draft" | "published" | "archived" | "achieved"; // Add "archived" here
-  category: string;
-  updatedAt: number;
-};
-
-
 interface ArticleCardProps {
-  posts: Post[];
-  title: string;
+  posts: {
+    _id: Id<"posts">;
+    _creationTime: number;
+    image?: string;
+    author: {
+      id: string;
+      name: string;
+      image: string;
+    };
+    title: string;
+    slug: string;
+    content: any;
+    excerpt: string;
+    status: "draft" | "published" | "archived";
+    category: string;
+    updatedAt: number;
+  }[];
+  title?: string;
 }
 
 const ArticleCard: React.FC<ArticleCardProps> = ({ posts, title }) => {
