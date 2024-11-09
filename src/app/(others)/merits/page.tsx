@@ -55,6 +55,7 @@ export default function Component() {
           title: post.title,
           imageUrl: post.image || '/default-image-url.png',
           description: post.excerpt || post.content || "No description available",
+          slug: post.title.toLowerCase().replace(/ /g, '-')
         }))} />
       ) : (
         <Card className="w-full max-w-2xl mx-auto my-8">

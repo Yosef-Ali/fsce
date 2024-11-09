@@ -238,6 +238,19 @@ export const getMerits = query({
   },
 });
 
+export const getMeritBySlug = query({
+  args: { slug: v.string() },
+  handler: async (ctx, args) => {
+    const merit = await ctx.db
+      .query("posts")
+      .filter(q => q.eq(q.field("category"), "Merits"))
+      .filter(q => q.eq(q.field("status"), "published"))
+      .filter(q => q.eq(q.field("slug"), args.slug))
+      .first();
+    return merit;
+  },
+});
+
 export const getPrograms = query({
   handler: async (ctx) => {
     // filter by category

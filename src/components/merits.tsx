@@ -5,9 +5,11 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 // Define the Merit interface
 interface Merit {
+  _id: string;
   title: string;
   imageUrl: string;
-  description?: string;
+  description: string;
+  slug: string;
 }
 
 interface MeritsProps {
