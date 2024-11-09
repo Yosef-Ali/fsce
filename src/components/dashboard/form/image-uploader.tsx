@@ -14,7 +14,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ control, onImageId, reset
   const [isValidUrl, setIsValidUrl] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-// Replace this with your actual Cloudinary cloud name
+  // Replace this with your actual Cloudinary cloud name
   const ACTUAL_CLOUD_NAME = 'dd9mce0qr'; // Replace this with your actual Cloudinary cloud name
 
   // Reset the image ID and validation state when the resetTrigger changes

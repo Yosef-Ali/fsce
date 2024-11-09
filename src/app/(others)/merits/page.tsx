@@ -45,7 +45,7 @@ export default function Component() {
       <CarouselSection />
       <Overview
         data={[]}
-        homeTitle="Merits"
+        title="Merits"  // changed from Title to title
         firstImageAlt="Description of image 1"
         secondImageAlt="Description of image 2"
       />
@@ -62,7 +62,7 @@ export default function Component() {
             <AlertCircle className="w-12 h-12 text-yellow-500" />
             <h2 className="text-2xl font-semibold text-primary">No Merit Posts Available Yet</h2>
             <p className="text-muted-foreground">
-              We're currently working on adding our achievements and recognitions.
+              We&apos;re currently working on adding our achievements and recognitions.
             </p>
             <p className="text-muted-foreground">
               Please check back soon to see our latest accomplishments!

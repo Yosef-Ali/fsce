@@ -92,12 +92,12 @@ export default function EditPost({ params }: { params: { slug: string } }) {
                 )}
               </div>
             </div>
-            {/* <div className="flex items-center justify-center gap-2 md:hidden">
+            <div className="flex items-center justify-center gap-2 md:hidden">
               <Button variant="outline" size="sm" onClick={() => handleStatusChange('draft')}>
                 Draft
               </Button>
               <Button size="sm" onClick={handleSave}>Save Post</Button>
-            </div> */}
+            </div>
           </div>
         </main>
       </div>

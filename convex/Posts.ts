@@ -61,28 +61,22 @@ export const updatePost = mutation({
   handler: async (ctx, args) => {
     const identity = await getAuthenticatedUser(ctx);
 
-    const post = await ctx.db.get(args.id);
-    if (!post) {
-      throw new ConvexError("Post not found");
-    }
-
     const user = await ctx.db
       .query("users")
-      .filter(q => q.eq(q.field("_id"), identity.subject))
+      .filter(q => q.eq(q.field("clerkId"), identity.subject))
       .unique();
 
     if (!user) {
       throw new ConvexError("User not found");
     }
 
+    const post = await ctx.db.get(args.id);
+    if (!post) {
+      throw new ConvexError("Post not found");
+    }
+
     const isAuthor = post.author.id === identity.subject;
     const isAdminOrOrgAdmin = user.role === "admin" || user.role === "org:admin";
-
-    console.log("Is author:", isAuthor);
-    console.log("Is admin or org admin:", isAdminOrOrgAdmin);
-    console.log("User role:", user.role);
-    console.log("Post author:", post.author);
-    console.log("User ID:", identity.subject);
 
     if (!isAuthor && !isAdminOrOrgAdmin) {
       throw new ConvexError("Unauthorized");
@@ -160,9 +154,16 @@ export const listPosts = query({
 export const getPostBySlug = query({
   args: { slug: v.string() },
   handler: async (ctx, args) => {
-    const post = await ctx.db.query("posts")
-      .filter(q => q.eq(q.field("slug"), args.slug))
-      .unique();
+    // Use withIndex to optimize the query and ensure uniqueness
+    const post = await ctx.db
+      .query("posts")
+      .withIndex("by_slug", (q) => q.eq("slug", args.slug))
+      .first(); // Use first() instead of unique() to avoid the error
+
+    if (!post) {
+      throw new Error(`Post with slug "${args.slug}" not found`);
+    }
+
     return post;
   },
 });
@@ -331,5 +332,17 @@ export const searchPosts = query({
       .take(20)
 
     return posts;
+  },
+});
+
+export const getBySlug = query({
+  args: { slug: v.string() },
+  handler: async (ctx, args) => {
+    const post = await ctx.db
+      .query("posts")
+      .filter((q) => q.eq(q.field("slug"), args.slug))
+      .first();
+
+    return post;
   },
 });

@@ -6,9 +6,12 @@ import { usePathname } from 'next/navigation';
 
 interface OverviewProps {
   data: Array<{ slug: string; content: string; title: string }>;
+  title?: string;  // make it optional since some places might use the default "Overview"
+  firstImageAlt?: string;
+  secondImageAlt?: string;
 }
 
-const Overview: React.FC<OverviewProps> = ({ data }) => {
+const Overview: React.FC<OverviewProps> = ({ data, title = "Overview", firstImageAlt, secondImageAlt }) => {
   const pathname = usePathname();
   const controls = useAnimation();
   const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.1 });
@@ -40,7 +43,7 @@ const Overview: React.FC<OverviewProps> = ({ data }) => {
         {/* First column */}
         <div className="md:col-span-4 flex items-center ">
           <div>
-            <h2 className="text-2xl font-semibold">Overview</h2>
+            <h2 className="text-2xl font-semibold">{title}</h2>
             <div>
               {isHomePage ? (
                 <h1 className="text-4xl font-bold mt-4 text-blue-900">Welcome to FSCE</h1>
@@ -60,12 +63,12 @@ const Overview: React.FC<OverviewProps> = ({ data }) => {
 
         {/* Second column */}
         <div className="md:col-span-2 relative bg-blue-500 rounded-lg shadow-md">
-          <img src="/images/student.png" alt="Description of image 1" className="w-full h-full object-cover rounded-lg" />
+          <img src="/images/student.png" alt={firstImageAlt || "Student"} className="w-full h-full object-cover rounded-lg" />
         </div>
 
         {/* Third column */}
         <div className="md:col-span-2 relative bg-blue-100 rounded-lg shadow-md">
-          <img src="/images/old-women-1.webp" alt="Description of image 2" className="w-full h-full object-cover rounded-lg" />
+          <img src="/images/old-women-1.webp" alt={secondImageAlt || "Elder woman"} className="w-full h-full object-cover rounded-lg" />
         </div>
       </div>
     </motion.div>

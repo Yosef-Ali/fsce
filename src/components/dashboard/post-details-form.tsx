@@ -367,7 +367,7 @@ import ImageUploader from "./form/image-uploader";
 import NovelEditor, { EditorContent } from "./novel-text-editor";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
-import CategorySelector from "./category-selecter";
+import PostCategorySelector from "./form/post-category-selector";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -655,10 +655,13 @@ export const PostDetailsForm: React.FC<PostDetailsFormProps> = ({ onImageUrlChan
               render={({ field }) => (
                 <FormItem>
                   {/* <CategorySelector control={form.control} categories={categories} /> */}
-                  <CategorySelector
+                  <PostCategorySelector
                     control={form.control}
                     categories={categories}
-                    defaultValue={post?.category} // Pass the category of the post if editing
+                    defaultValue={post?.category}
+                    onChange={(value: string) => {
+                      field.onChange(value);
+                    }}
                   />
                 </FormItem>
               )}

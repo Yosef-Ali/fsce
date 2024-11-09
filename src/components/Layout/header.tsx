@@ -50,7 +50,6 @@ const menuItems = [
   },
   {
     title: "News and Events",
-    href: "/news-and-events",
     items: [
       { title: "News", href: "/news", description: "Stay updated with our latest activities, achievements, and initiatives" },
       { title: "Events", href: "/events", description: "Discover upcoming programs, workshops, and community gatherings" },
