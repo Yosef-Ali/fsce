@@ -9,7 +9,7 @@ import Partners from '@/components/partners'
 import Merits from '@/components/merits'
 import Overview from '@/components/Overview'
 import CarouselSection from "@/components/carousel"
-import { Card, CardContent } from "@/components/ui/card"
+import { EmptyState } from '@/components/EmptyState'
 import { AlertCircle } from "lucide-react"
 
 type Post = {
@@ -58,18 +58,14 @@ export default function Component() {
           slug: post.title.toLowerCase().replace(/ /g, '-')
         }))} />
       ) : (
-        <Card className="w-full max-w-2xl mx-auto my-8">
-          <CardContent className="flex flex-col items-center space-y-4 text-center p-6">
-            <AlertCircle className="w-12 h-12 text-yellow-500" />
-            <h2 className="text-2xl font-semibold text-primary">No Merit Posts Available Yet</h2>
-            <p className="text-muted-foreground">
-              We&apos;re currently working on adding our achievements and recognitions.
-            </p>
-            <p className="text-muted-foreground">
-              Please check back soon to see our latest accomplishments!
-            </p>
-          </CardContent>
-        </Card>
+        <EmptyState 
+          icon={AlertCircle}
+          title="No Merit Posts Available Yet"
+          messages={[
+            "We're currently working on adding our achievements and recognitions.",
+            "Please check back soon to see our latest accomplishments!"
+          ]}
+        />
       )}
       <Partners />
     </>
