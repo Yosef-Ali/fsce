@@ -24,7 +24,7 @@ export default defineSchema({
   posts: defineTable({
     title: v.string(),
     slug: v.string(),
-    image: v.optional(v.string()),
+    images: v.optional(v.array(v.string())), // Changed 'image' to 'images'
     content: v.any(),
     excerpt: v.string(),
     status: v.union(v.literal("draft"), v.literal("published"), v.literal("archived")),
@@ -72,7 +72,4 @@ export default defineSchema({
     .index("by_createdAt", ["createdAt"])
     .index("by_authorId", ["authorId"])
 });
-
-
-
 

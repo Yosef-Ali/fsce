@@ -8,10 +8,11 @@ import FeaturedPosts from "@/components/FeaturedPosts";
 import PostCard from "@/components/PostCard";
 import { Post } from '@/types'; // Adjust this path according to your project structure
 import { useQuery } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
+
 import FSCESkeleton from "@/components/FSCESkeleton";
 import ArticleCard from "@/components/ArticleCard";
 import NewsFeedSkeleton from "@/components/NewsFeedSkeleton";
+import { api } from "../../../../../convex/_generated/api";
 
 export default function NewsAndEventsPage() {
 

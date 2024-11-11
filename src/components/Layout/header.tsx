@@ -18,57 +18,7 @@ import { Button } from "../ui/button"
 import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
 import { ModeToggle } from "@/app/mode-toggle"
 import Logo from "../logo"
-
-const menuItems = [
-  {
-    title: "Who We Are",
-    href: "/who-we-are",
-    items: [
-      { title: "Values and Principles", href: "/who-we-are", description: "Our core beliefs and guiding principles" },
-      { title: "Board Members", href: "/board-members", description: "Meet our leadership team" },
-      { title: "Partners", href: "/partners", description: "Our collaborators and supporters" },
-      { title: "Merits", href: "/merits", description: "Our achievements and recognitions" },
-    ],
-  },
-  {
-    title: "What We Do",
-    href: "/what-we-do",
-    items: [
-      { title: "Prevention and Promotion Program", href: "/what-we-do/prevention-promotion", description: "Proactive measures for child welfare" },
-      { title: "Protection", href: "/what-we-do/protection", description: "Safeguarding children's rights and safety" },
-      { title: "Rehabilitation and Reintegration", href: "/what-we-do/rehabilitation", description: "Supporting children's recovery and social integration" },
-      { title: "Child Resource Center", href: "/what-we-do/resource-center", description: "Educational and support facilities for children" },
-    ],
-  },
-  {
-    title: "Where We Work",
-    href: "/where-we-work",
-    items: [
-      { title: "City Area Program Offices", href: "/city-offices", description: "Our urban program locations" },
-      { title: "Regional Area Program Offices", href: "/regional-offices", description: "Our presence across different regions" },
-    ],
-  },
-  {
-    title: "News and Events",
-    items: [
-      { title: "News", href: "/news", description: "Stay updated with our latest activities, achievements, and initiatives" },
-      { title: "Events", href: "/events", description: "Discover upcoming programs, workshops, and community gatherings" },
-    ],
-  },
-  {
-    title: "Resources",
-    hrf: "/resources",
-    items: [
-      { title: "Reports and Reviews", href: "/reports", description: "Our published findings and evaluations" },
-      { title: "FSCE Publications", href: "/publications", description: "Official documents and literature" },
-      { title: "Case Stories", href: "/case-stories", description: "Real-life impact stories" },
-    ],
-  },
-  {
-    title: "Contact Us",
-    href: "/contact",
-  },
-]
+import menuItems from "@/lib/data"
 
 export function Header() {
   const pathname = usePathname()

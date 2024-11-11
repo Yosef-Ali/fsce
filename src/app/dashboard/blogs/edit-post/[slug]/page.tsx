@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { BreadcrumbNavigation } from "@/components/dashboard/breadcrumb-navigation";
 import { PostDetailsForm } from "@/components/dashboard/post-details-form";
 import { PostStatusSelect } from "@/components/dashboard/post-status-select";
-import { ImageUploader } from "@/components/dashboard/image-uploader";
+import { ImageUploader } from "@/components/dashboard/image-uploader-card";
 import { useQuery } from 'convex/react';
 import { api } from '../../../../../../convex/_generated/api';
 

@@ -363,7 +363,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 
-import ImageUploader from "./form/image-uploader";
+import ImageUploader from "./form/image-uploader-input";
 import NovelEditor, { EditorContent } from "./novel-text-editor";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";

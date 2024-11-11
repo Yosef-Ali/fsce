@@ -3,27 +3,36 @@ import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessa
 import { Input } from "@/components/ui/input";
 import UploadButton from "../upload-button";
 import { CheckCircle, XCircle } from 'lucide-react';
+import { Control } from 'react-hook-form';
 
 interface ImageUploaderProps {
-  control: any;
-  onImageId: (imageId: string | null) => void;
+  control: Control<any>;
+  onImageIds: (imageIds: string[]) => void; // Update to handle multiple IDs
   resetTrigger: number;
+  maxImages?: number; // Add max images limit
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ control, onImageId, resetTrigger }) => {
+const ImageUploader: React.FC<ImageUploaderProps> = ({
+  control,
+  onImageIds,
+  resetTrigger,
+  maxImages = 5
+}) => {
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [isValidUrl, setIsValidUrl] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Replace this with your actual Cloudinary cloud name
   const ACTUAL_CLOUD_NAME = 'dd9mce0qr'; // Replace this with your actual Cloudinary cloud name
 
-  // Reset the image ID and validation state when the resetTrigger changes
+  // Reset uploaded images and validation state when the resetTrigger changes
   useEffect(() => {
     if (resetTrigger > 0) {
-      onImageId(null);
+      setUploadedImages([]);
+      onImageIds([]);
       setIsValidUrl(null);
     }
-  }, [resetTrigger, onImageId]);
+  }, [resetTrigger, onImageIds]);
 
   // Normalize Cloudinary URLs to ensure consistency
   const normalizeCloudinaryUrl = (url: string): string => {
@@ -62,26 +71,31 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ control, onImageId, reset
       setIsValidUrl(isValid);
       setIsLoading(false);
       if (isValid) {
-        onImageId(normalizedUrl);
-      } else {
-        onImageId(null);
+        handleUpload(normalizedUrl);
       }
     } else {
       setIsValidUrl(null);
       setIsLoading(false);
-      onImageId(null);
     }
   };
 
   // Handle image uploads using the UploadButton component
   const handleUpload = (imageId: string) => {
-    setIsValidUrl(true);
-    setIsLoading(false);
-    onImageId(imageId);
+    if (uploadedImages.length < maxImages) {
+      const newImages = [...uploadedImages, imageId];
+      setUploadedImages(newImages);
+      onImageIds(newImages);
+    }
+  };
+
+  const removeImage = (index: number) => {
+    const newImages = uploadedImages.filter((_, i) => i !== index);
+    setUploadedImages(newImages);
+    onImageIds(newImages);
   };
 
   return (
-    <div className="flex w-full items-center space-x-2 mb-4">
+    <div className="space-y-4">
       <FormField
         control={control}
         name="image"
@@ -116,13 +130,32 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ control, onImageId, reset
                   )}
                 </div>
               </FormControl>
-              <UploadButton onImageId={handleUpload} />
+              {uploadedImages.length < maxImages && (
+                <UploadButton onImageId={handleUpload} />
+              )}
             </div>
             <FormDescription className="text-sm">Enter a public image URL or use the upload button.</FormDescription>
             {isValidUrl === false && <FormMessage className="text-sm text-red-500">The provided URL is not a valid image. Please check the URL and try again.</FormMessage>}
           </FormItem>
         )}
       />
+      <div className="grid grid-cols-3 gap-4">
+        {uploadedImages.map((imageId, index) => (
+          <div key={index} className="relative">
+            <img
+              src={imageId}
+              alt={`Uploaded ${index + 1}`}
+              className="aspect-square w-full rounded-md object-cover"
+            />
+            <button
+              onClick={() => removeImage(index)}
+              className="absolute top-2 right-2 p-1 bg-red-500 rounded-full"
+            >
+              <XCircle className="w-4 h-4 text-white" />
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

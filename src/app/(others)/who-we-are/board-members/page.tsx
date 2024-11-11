@@ -5,7 +5,7 @@ import { useQuery } from "convex/react";
 import Sidebar from "@/components/Sidebar";
 import CarouselSection from "@/components/carousel";
 import MapComponent from "@/components/ethiopian-map";
-import { api } from "../../../../convex/_generated/api";
+
 import VisionMissionGoals from '@/components/VisionMissionGoals';
 import WhatWeDoSection from '@/components/what-we-do';
 import FeaturesSection from '@/components/who-we-are';
@@ -14,6 +14,7 @@ import GoodGovernance from '@/components/good-governance';
 import Affiliations from '@/components/affiliations';
 import Partners from '@/components/partners';
 import BoardMembers from '@/components/BoardMembers';
+import { api } from '../../../../../convex/_generated/api';
 
 const members = [
   {

@@ -16,7 +16,7 @@ export const addPost = mutation({
   args: {
     title: v.string(),
     slug: v.string(),
-    image: v.optional(v.string()),
+    images: v.optional(v.array(v.string())),
     status: v.optional(v.union(v.literal("draft"), v.literal("published"), v.literal("archived"))),
     content: v.any(),
     excerpt: v.string(),

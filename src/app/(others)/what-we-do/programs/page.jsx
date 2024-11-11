@@ -2,7 +2,7 @@
 
 import CarouselSection from "@/components/carousel";
 import { useQuery } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
+import { api } from "../../../../../convex/_generated/api";
 import FSCESkeleton from "@/components/FSCESkeleton";
 import Overview from "@/components/Overview";
 import MasonryGrid from "@/components/MasonryGrid";

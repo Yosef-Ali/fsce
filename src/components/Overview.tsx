@@ -5,7 +5,7 @@ import RenderedContent from './render-content';
 import { usePathname } from 'next/navigation';
 
 interface OverviewProps {
-  data: Array<{ slug: string; content: string; title: string }>;
+  data: Array<{ slug: string; content: string; title: string; images?: string[] }>;
   title?: string;  // make it optional since some places might use the default "Overview"
   firstImageAlt?: string;
   secondImageAlt?: string;
@@ -63,7 +63,9 @@ const Overview: React.FC<OverviewProps> = ({ data, title = "Overview", firstImag
 
         {/* Second column */}
         <div className="md:col-span-2 relative bg-blue-500 rounded-lg shadow-md">
-          <img src="/images/student.png" alt={firstImageAlt || "Student"} className="w-full h-full object-cover rounded-lg" />
+          {content?.images?.map((imageUrl, index) => (
+            <img key={index} src={imageUrl} alt={firstImageAlt || `Image ${index + 1}`} className="w-full h-full object-cover rounded-lg" />
+          ))}
         </div>
 
         {/* Third column */}

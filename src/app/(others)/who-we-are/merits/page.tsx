@@ -16,7 +16,7 @@ type Post = {
   _id: Id<"posts">
   _creationTime: number
   title: string
-  image?: string
+  images?: string[] // Changed 'image' to 'images'
   excerpt?: string
   content?: string
   updatedAt: number
@@ -42,17 +42,12 @@ export default function Component() {
   return (
     <>
       <CarouselSection />
-      <Overview
-        data={[]}
-        title="Merits"  // changed from Title to title
-        firstImageAlt="Description of image 1"
-        secondImageAlt="Description of image 2"
-      />
+      <Overview data={result} />
       {result.length > 0 ? (
         <Merits merits={result.map(post => ({
           _id: post._id,
           title: post.title,
-          imageUrl: post.image || '/default-image-url.png',
+          images: post.images || ['/default-image-url.png'], // Changed 'image' to 'images'
           description: post.excerpt || post.content || "No description available",
           slug: post.title.toLowerCase().replace(/ /g, '-')
         }))} />

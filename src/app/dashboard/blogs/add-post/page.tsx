@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { BreadcrumbNavigation } from "@/components/dashboard/breadcrumb-navigation";
 import { PostDetailsForm } from "@/components/dashboard/post-details-form";
 import { PostStatusSelect } from "@/components/dashboard/post-status-select";
-import { ImageUploader } from "@/components/dashboard/image-uploader";
+import { ImageUploaderCard } from "@/components/dashboard/image-uploader-card";
 import { useToast } from "@/components/ui/use-toast";
 
 type PostStatus = "draft" | "published" | "archived";
@@ -54,7 +54,7 @@ export default function AddPost() {
             <div className="grid gap-4 lg:grid-cols-3 md:gap-8">
               <div className="grid auto-rows-max items-start gap-4 lg:col-span-1 lg:order-2">
                 <PostStatusSelect initialStatus={status} onStatusChange={handleStatusChange} />
-                <ImageUploader imageUrl={imageUrl} />
+                <ImageUploaderCard imageUrl={imageUrl} />
               </div>
               <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:order-1">
                 <PostDetailsForm
