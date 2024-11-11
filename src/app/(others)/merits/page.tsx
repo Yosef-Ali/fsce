@@ -30,7 +30,6 @@ export default function Component() {
   if (result === undefined) {
     return (
       <div>
-        <p>Loading all merits...</p>
         <FSCESkeleton />
       </div>
     )
@@ -58,7 +57,7 @@ export default function Component() {
           slug: post.title.toLowerCase().replace(/ /g, '-')
         }))} />
       ) : (
-        <EmptyState 
+        <EmptyState
           icon={AlertCircle}
           title="No Merit Posts Available Yet"
           messages={[

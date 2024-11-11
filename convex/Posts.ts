@@ -1,9 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query, QueryCtx, MutationCtx } from "./_generated/server";
 import { ConvexError } from "convex/values";
-import { stat } from "fs";
 import { paginationOptsValidator } from "convex/server";
-
 
 // Helper function to get authenticated user
 const getAuthenticatedUser = async (ctx: QueryCtx | MutationCtx) => {
