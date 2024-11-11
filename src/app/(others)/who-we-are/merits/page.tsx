@@ -2,8 +2,8 @@
 
 import React from 'react'
 import { useQuery } from "convex/react"
-import { api } from "../../../../convex/_generated/api"
-import { Id } from "../../../../convex/_generated/dataModel"
+import { api } from "../../../../../convex/_generated/api"
+import { Id } from "../../../../../convex/_generated/dataModel"
 import FSCESkeleton from '@/components/FSCESkeleton'
 import Partners from '@/components/partners'
 import Merits from '@/components/merits'
